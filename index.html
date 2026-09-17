@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#000000" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<title>NOIR — Dark Cinematic Filter</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #000;
+    color: #f4f4f4;
+    min-height: 100vh;
+    min-height: 100dvh;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior: none;
+  }
+  body { display: flex; flex-direction: column; }
+
+  header { text-align: center; padding: 22px 16px 6px; }
+  h1 {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.55em;
+    text-indent: 0.55em;
+    color: #fff;
+  }
+  .sub {
+    margin: 8px 0 0;
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    opacity: 0.5;
+  }
+
+  #stage {
+    flex: 1 1 auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    overflow: hidden;
+  }
+  #out { display: block; background: #000; }
+  #empty {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.35;
+    pointer-events: none;
+    padding: 0 24px;
+  }
+  #play {
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: 78px; height: 78px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.45);
+    background: rgba(0,0,0,0.38);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    z-index: 3;
+  }
+  #play svg { width: 26px; height: 26px; fill: #fff; }
+  #play.show { display: flex; }
+
+  #mute {
+    position: absolute;
+    right: 12px; bottom: 12px;
+    width: 40px; height: 40px;
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 50%;
+    background: rgba(0,0,0,0.4);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    z-index: 4;
+  }
+  #mute svg { width: 18px; height: 18px; fill: #fff; }
+  #mute.show { display: flex; }
+
+  footer {
+    text-align: center;
+    padding: 12px 16px calc(20px + env(safe-area-inset-bottom, 0px));
+  }
+  #pick {
+    display: inline-block;
+    border: 1px solid rgba(255,255,255,0.32);
+    color: #fff;
+    padding: 13px 38px;
+    font-size: 12px;
+    letter-spacing: 0.32em;
+    text-indent: 0.32em;
+    text-transform: uppercase;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.18s ease, color 0.18s ease;
+  }
+  #pick:active { background: #fff; color: #000; }
+  #save {
+    display: none;
+    margin: 14px auto 0;
+    border: 1px solid rgba(255,255,255,0.32);
+    color: #fff;
+    background: transparent;
+    padding: 15px 30px;
+    font-size: 12px;
+    font-family: inherit;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.18s ease, color 0.18s ease, opacity 0.18s ease;
+  }
+  #save.show { display: inline-block; }
+  #save:active { background: #fff; color: #000; }
+  #save:disabled { opacity: 0.55; cursor: default; }
+  #status {
+    display: block;
+    margin: 12px auto 0;
+    min-height: 14px;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+  }
+  .hint {
+    margin: 14px 0 0;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    opacity: 0.4;
+  }
+  #file {
+    position: absolute;
+    width: 1px; height: 1px;
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  #video {
+    position: absolute;
+    top: -9999px;
+    width: 1px; height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>NOIR</h1>
+  <p class="sub">Dark Cinematic Filter</p>
+</header>
+
+<div id="stage">
+  <canvas id="out" width="16" height="9"></canvas>
+  <div id="empty">Load a video to begin</div>
+  <button id="play" type="button" aria-label="Play or pause">
+    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+  </button>
+  <button id="mute" type="button" aria-label="Mute or unmute">
+    <svg id="icoVolOn" viewBox="0 0 24 24" style="display:none"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>
+    <svg id="icoVolOff" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm14.6 3 2.7-2.7-1.4-1.4-2.7 2.7-2.7-2.7-1.4 1.4 2.7 2.7-2.7 2.7 1.4 1.4 2.7-2.7 2.7 2.7 1.4-1.4-2.7-2.7z"/></svg>
+  </button>
+</div>
+
+<footer>
+  <label id="pick" for="file">Choose Video</label>
+  <input id="file" type="file" accept="video/*" />
+  <br/>
+  <button id="save" type="button" disabled><span id="saveTxt">&#11015;&#65039; Save Video to Phone</span></button>
+  <span id="status"></span>
+  <p class="hint">Your video stays on this device. Tap the frame to play.</p>
+</footer>
+
+<video id="video" playsinline preload="auto"></video>
+
+<script>
+(function () {
+  "use strict";
+
+  var video    = document.getElementById("video");
+  var canvas   = document.getElementById("out");
+  var ctx      = canvas.getContext("2d", { willReadFrequently: true, alpha: false });
+  var stage    = document.getElementById("stage");
+  var empty    = document.getElementById("empty");
+  var playBtn  = document.getElementById("play");
+  var muteBtn  = document.getElementById("mute");
+  var icoOn    = document.getElementById("icoVolOn");
+  var icoOff   = document.getElementById("icoVolOff");
+  var fileIn   = document.getElementById("file");
+  var saveBtn  = document.getElementById("save");
+  var saveTxt  = document.getElementById("saveTxt");
+  var statusEl = document.getElementById("status");
+
+  var loaded = false;
+  var needsFrame = true;
+  var vigCache = {};
+  var lastUrl = null;
+
+  /* ---------- tone curve: deep blacks, soft highlights ---------- */
+  var K = 0.55;
+  var curve = new Uint8ClampedArray(256);
+  for (var i = 0; i < 256; i++) {
+    var t = i / 255;
+    var s = t + K * t * (1 - t) * (2 * t - 1); // filmic S-curve
+    curve[i] = s * 0.955 * 255;                // deepen overall
+  }
+  /* cool grade baked per channel: -2 red / 0 green / +4 blue */
+  function ci(v){ return v < 0 ? 0 : v > 255 ? 255 : v; }
+  var lutR = new Uint8ClampedArray(256);
+  var lutG = new Uint8ClampedArray(256);
+  var lutB = new Uint8ClampedArray(256);
+  for (var j = 0; j < 256; j++) {
+    lutR[j] = curve[ci(j - 2)];
+    lutG[j] = curve[ci(j)];
+    lutB[j] = curve[ci(j + 4)];
+  }
+
+  /* ---------- film grain tile ---------- */
+  var T = 256;
+  var grain = new Float32Array(T * T);
+  for (var g = 0; g < grain.length; g++) {
+    grain[g] = (Math.random() * 2 - 1) * 9;
+  }
+
+  function buildVig(w, h) {
+    var arr = new Float32Array(w * h);
+    var cx = w / 2, cy = h / 2;
+    var maxD = Math.sqrt(cx * cx + cy * cy) || 1;
+    for (var y = 0; y < h; y++) {
+      for (var x = 0; x < w; x++) {
+        var dx = (x + 0.5 - cx) / maxD;
+        var dy = (y + 0.5 - cy) / maxD;
+        var d = Math.sqrt(dx * dx + dy * dy);
+        var t = (d - 0.55) / (1.02 - 0.55);
+        t = t < 0 ? 0 : t > 1 ? 1 : t;
+        t = t * t * (3 - 2 * t);
+        arr[y * w + x] = 1 - t * 0.36;
+      }
+    }
+    return arr;
+  }
+  function getVig(w, h) {
+    var k = w + "x" + h;
+    if (!vigCache[k]) vigCache[k] = buildVig(w, h);
+    return vigCache[k];
+  }
+
+  function fit() {
+    var r = stage.getBoundingClientRect();
+    var vw = video.videoWidth || 16;
+    var vh = video.videoHeight || 9;
+    var s = Math.min(r.width / vw, r.height / vh);
+    if (!isFinite(s) || s <= 0) return;
+    var w = Math.max(2, Math.round(vw * s));
+    var h = Math.max(2, Math.round(vh * s));
+    var cap = 1280;
+    if (w > cap) { h = Math.round(h * cap / w); w = cap; }
+    canvas.width = w;
+    canvas.height = h;
+    canvas.style.width = w + "px";
+    canvas.style.height = h + "px";
+    getVig(w, h);
+    needsFrame = true;
+  }
+
+  function paint(c2d, w, h, vigArr) {
+    c2d.drawImage(video, 0, 0, w, h);
+    var img = c2d.getImageData(0, 0, w, h);
+    var data = img.data;
+    var ox = (Math.random() * T) | 0;
+    var oy = (Math.random() * T) | 0;
+    var KS = 0.6; /* saturation kept: 60% -> muted cool-gray */
+
+    for (var y = 0; y < h; y++) {
+      var row = y * w;
+      var gRow = ((y + oy) & 255) << 8;
+      for (var x = 0; x < w; x++) {
+        var pi = row + x;
+        var o = pi * 4;
+        var r = data[o], gg = data[o + 1], b = data[o + 2];
+
+        var L = r * 0.2126 + gg * 0.7152 + b * 0.0722;
+        r  = L + (r - L) * KS;
+        gg = L + (gg - L) * KS;
+        b  = L + (b - L) * KS;
+
+        var v = vigArr[pi];
+        var n = grain[gRow | ((x + ox) & 255)];
+
+        data[o]     = lutR[r | 0] * v + n;
+        data[o + 1] = lutG[gg | 0] * v + n;
+        data[o + 2] = lutB[b | 0] * v + n;
+      }
+    }
+    c2d.putImageData(img, 0, 0);
+  }
+
+  function draw() {
+    var w = canvas.width, h = canvas.height;
+    if (w < 2 || h < 2) return;
+    paint(ctx, w, h, getVig(w, h));
+  }
+
+  function loop() {
+    requestAnimationFrame(loop);
+    if (!loaded || video.readyState < 2) return;
+    if (!video.paused) {
+      draw();
+    } else if (needsFrame) {
+      needsFrame = false;
+      draw();
+    }
+  }
+
+  function updateOverlay() {
+    playBtn.classList.toggle("show", loaded && video.paused);
+  }
+  function updateMute() {
+    icoOn.style.display  = video.muted ? "none" : "block";
+    icoOff.style.display = video.muted ? "block" : "none";
+  }
+  function togglePlay() {
+    if (video.paused) { video.play(); } else { video.pause(); }
+  }
+
+  fileIn.addEventListener("change", function () {
+    var f = fileIn.files && fileIn.files[0];
+    fileIn.value = "";
+    if (!f) return;
+    if (lastUrl) { try { URL.revokeObjectURL(lastUrl); } catch (e) {} lastUrl = null; }
+    resetExport();
+    saveBtn.disabled = true;
+    saveBtn.classList.remove("show");
+    saveTxt.textContent = "\u2B07\uFE0F Save Video to Phone";
+    statusEl.textContent = "";
+    if (window.URL && URL.createObjectURL) {
+      var url = URL.createObjectURL(f);
+      video.src = url;
+    } else if (video.canPlayType) {
+      var rf = new FileReader();
+      rf.onload = function () { video.src = rf.result; };
+      rf.readAsDataURL(f);
+    }
+    video.load();
+  });
+
+  video.addEventListener("loadedmetadata", function () { fit(); });
+  video.addEventListener("loadeddata", function () {
+    loaded = true;
+    empty.style.display = "none";
+    muteBtn.classList.add("show");
+    saveBtn.classList.add("show");
+    saveBtn.disabled = false;
+    fit();
+    draw();
+    updateMute();
+    /* first frame shows immediately; try muted autoplay for instant motion */
+    video.muted = true;
+    updateMute();
+    var p;
+    try { p = video.play(); } catch (e) { p = null; }
+    if (p && p.then) {
+      p.then(updateOverlay).catch(function () {
+        video.muted = false;
+        updateMute();
+        updateOverlay();
+      });
+    } else {
+      video.muted = false;
+      updateMute();
+      updateOverlay();
+    }
+  });
+  video.addEventListener("play",  updateOverlay);
+  video.addEventListener("pause", function () { needsFrame = true; updateOverlay(); });
+  video.addEventListener("ended", updateOverlay);
+  video.addEventListener("seeked", function () { needsFrame = true; });
+  video.addEventListener("volumechange", updateMute);
+
+  playBtn.addEventListener("click", function (e) { e.stopPropagation(); togglePlay(); });
+  muteBtn.addEventListener("click", function (e) {
+    e.stopPropagation();
+    video.muted = !video.muted;
+  });
+  stage.addEventListener("click", function () { if (loaded) togglePlay(); });
+
+  window.addEventListener("resize", function () { fit(); });
+  window.addEventListener("orientationchange", function () { setTimeout(fit, 120); });
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", function () { fit(); });
+  }
+
+  /* ---------- EXPORT: re-render the filtered video and save the FILE ---------- */
+  function extOf(name) {
+    var m = /\.([a-z0-9]{2,5})$/i.exec(name || "");
+    return m ? m[1].toLowerCase() : "";
+  }
+  function pickMime() {
+    if (window.MediaRecorder) {
+      if (MediaRecorder.isTypeSupported("video/mp4")) return "video/mp4";
+      if (MediaRecorder.isTypeSupported("video/mp4;codecs=avc1")) return "video/mp4;codecs=avc1";
+      if (MediaRecorder.isTypeSupported("video/webm;codecs=vp9")) return "video/webm;codecs=vp9";
+      if (MediaRecorder.isTypeSupported("video/webm;codecs=vp8")) return "video/webm;codecs=vp8";
+      if (MediaRecorder.isTypeSupported("video/webm")) return "video/webm";
+    }
+    return null;
+  }
+  function setStatus(t){ statusEl.textContent = t; }
+
+  function shareOrDownload(blob, name) {
+    var fl = null;
+    try { fl = new File([blob], name, { type: (blob && blob.type) || "video/mp4" }); } catch (e) {}
+    if (navigator.share && fl && navigator.canShare && navigator.canShare({ files: [fl] })) {
+      var p = navigator.share({ files: [fl], title: "NOIR" });
+      if (p && p.then) p.catch(function () {});
+      return;
+    }
+    var url = null;
+    try { url = URL.createObjectURL(blob); } catch (e) {}
+    if (url) {
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function () { document.body.removeChild(a); }, 500);
+    } else if (navigator.share) {
+      navigator.share({ title: "NOIR", text: "Filtered video", url: location.href });
+    }
+  }
+
+  var exportState = "idle"; /* idle | exporting | ready */
+  var exportBlob = null;
+  var exportName = null;
+
+  function resetExport() {
+    exportState = "idle";
+    exportBlob = null;
+    exportName = null;
+  }
+
+  function doExport() {
+    if (exportState !== "idle" || !loaded) return;
+    var mime = pickMime();
+    if (!mime) { setStatus("Export not supported in this browser"); return; }
+
+    exportState = "exporting";
+    saveBtn.disabled = true;
+    saveTxt.textContent = "\u2B07\uFE0F Processing video\u2026";
+    if (!video.paused) { try { video.pause(); } catch (e) {} }
+
+    var w = video.videoWidth, h = video.videoHeight;
+    if (!w || !h) { exportState = "idle"; saveBtn.disabled = false; setStatus("Export failed"); return; }
+    var cap = 1280;
+    if (w > cap) { h = Math.round(h * cap / w); w = cap; }
+
+    var off = document.createElement("canvas");
+    off.width = w; off.height = h;
+    var octx = off.getContext("2d", { alpha: false, willReadFrequently: true });
+    var vigArr = getVig(w, h);
+
+    var stream = off.captureStream(0);
+    /* pull the ORIGINAL audio track into the export stream */
+    var audioAdded = false;
+    function addAudioTrack(t) {
+      if (t && stream.getAudioTracks().indexOf(t) < 0) { stream.addTrack(t); audioAdded = true; }
+    }
+    if (video.captureStream) {
+      try {
+        var vs = video.captureStream();
+        vs.getAudioTracks().forEach(addAudioTrack);
+      } catch (e) {}
+    }
+    if (video.mozStreams && video.mozStreams[0]) {
+      video.mozStreams[0].getAudioTracks().forEach(addAudioTrack);
+    } else if (video.audioTracks && video.audioTracks[0]) {
+      addAudioTrack(video.audioTracks[0]);
+    }
+
+    var rec;
+    try {
+      rec = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: Math.max(1500000, Math.round(w * h * 0.14)) });
+    } catch (e) {
+      rec = new MediaRecorder(stream);
+    }
+
+    var chunks = [];
+    rec.ondataavailable = function (e) { if (e.data && e.data.size > 0) chunks.push(e.data); };
+    rec.onstop = function () {
+      var mimePlain = (mime.split(";")[0] || "video/mp4");
+      var ext = /mp4/i.test(mimePlain) ? "mp4" : (/webm/i.test(mimePlain) ? "webm" : "mp4");
+      var blob = new Blob(chunks, { type: mimePlain });
+      if (blob.size < 4096 || chunks.length < 1) {
+        exportState = "idle";
+        saveBtn.disabled = false;
+        setStatus("Export produced no data");
+        return;
+      }
+      exportBlob = blob;
+      exportName = "noir-filtered-" + new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-") + "." + ext;
+      exportState = "ready";
+      saveBtn.disabled = false;
+      saveTxt.textContent = "\u2B07\uFE0F Save Filtered Video";
+      setStatus("Ready \u2014 tap Save to get the filtered video");
+    };
+
+    var raf = 0;
+    function onSeeked() { video.removeEventListener("seeked", onSeeked); paintFrame(); }
+    video.addEventListener("seeked", onSeeked);
+
+    function paintFrame() { paint(octx, w, h, vigArr); try { stream.getVideoTracks()[0].requestFrame(); } catch (e) {} }
+
+    setStatus("Processing video\u2026");
+    rec.start(250);
+
+    /* animate the real video so audio records naturally and frames paint live */
+    video.currentTime = 0;
+    var startDur = video.duration || 0;
+
+    function tick() {
+      if (exportState === "exporting") {
+        paintFrame();
+        var cur = video.currentTime;
+        var pct = startDur > 0 ? Math.min(99, Math.round((cur / startDur) * 100)) : 0;
+        setStatus("Processing video\u2026 " + pct + "%");
+        raf = requestAnimationFrame(tick);
+      }
+    }
+    raf = requestAnimationFrame(tick);
+
+    /* ensure audio is on so it can be captured for the exported file */
+    video.muted = false;
+    updateMute();
+    var p = null;
+    try { p = video.play(); } catch (e) {}
+
+    function finish() {
+      cancelAnimationFrame(raf);
+      video.removeEventListener("ended", finish);
+      try { video.pause(); } catch (e) {}
+      try { rec.stop(); } catch (e) {}
+    }
+    video.addEventListener("ended", finish);
+    var maxGuard = setTimeout(function () { if (exportState === "exporting") finish(); }, Math.max(5000, ((startDur + 3) * 1000)) );
+    video.addEventListener("ended", function () { clearTimeout(maxGuard); }, { once: true });
+  }
+
+  saveBtn.addEventListener("click", function () {
+    if (exportState === "ready" && exportBlob) {
+      shareOrDownload(exportBlob, exportName);
+      setStatus("Saved \u2014 check your downloads/files");
+    } else if (exportState === "idle") {
+      doExport();
+    }
+  });
+
+  fit();
+  requestAnimationFrame(loop);
+})();
+</script>
+
+</body>
+</html>
