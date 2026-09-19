@@ -1,174 +1,400 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-<meta name="theme-color" content="#000000" />
-<meta name="mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>NOIR — Dark Cinematic Filter</title>
+
 <style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: #000;
-    color: #f4f4f4;
-    min-height: 100vh;
-    min-height: 100dvh;
-    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    overscroll-behavior: none;
-  }
-  body { display: flex; flex-direction: column; }
+:root{
+  color-scheme:dark;
+  --line:rgba(255,255,255,.18);
+  --muted:rgba(255,255,255,.56)
+}
 
-  header { text-align: center; padding: 22px 16px 6px; }
-  h1 {
-    margin: 0;
-    font-size: 13px;
-    font-weight: 400;
-    letter-spacing: 0.55em;
-    text-indent: 0.55em;
-    color: #fff;
-  }
-  .sub {
-    margin: 8px 0 0;
-    font-size: 10px;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    opacity: 0.5;
+*{
+  box-sizing:border-box
+}
+
+html,body{
+  margin:0;
+  background:#000;
+  color:#f4f4f4;
+  min-height:100%;
+  font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased
+}
+
+body{
+  min-height:100dvh;
+  padding-bottom:env(safe-area-inset-bottom)
+}
+
+button,label{
+  font:inherit
+}
+
+button{
+  color:#fff;
+  background:transparent;
+  border:1px solid var(--line);
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent
+}
+
+button:disabled{
+  opacity:.35;
+  cursor:default
+}
+
+header{
+  text-align:center;
+  padding:20px 16px 10px
+}
+
+h1{
+  margin:0;
+  font-size:13px;
+  font-weight:400;
+  letter-spacing:.55em;
+  text-indent:.55em
+}
+
+.sub{
+  margin:8px 0 0;
+  font-size:10px;
+  letter-spacing:.28em;
+  text-transform:uppercase;
+  opacity:.5
+}
+
+main{
+  width:min(1100px,100%);
+  margin:auto;
+  padding:0 12px 20px
+}
+
+#stage{
+  position:relative;
+  height:min(58vh,620px);
+  min-height:280px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  background:#050505;
+  border:1px solid rgba(255,255,255,.06)
+}
+
+#out{
+  display:block;
+  background:#000;
+  max-width:100%;
+  max-height:100%
+}
+
+#empty{
+  position:absolute;
+  text-align:center;
+  font-size:11px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  opacity:.35;
+  padding:24px;
+  pointer-events:none
+}
+
+#statusOverlay{
+  position:absolute;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:12px;
+  background:rgba(0,0,0,.62);
+  backdrop-filter:blur(4px);
+  z-index:8;
+  text-align:center
+}
+
+#statusOverlay.show{
+  display:flex
+}
+
+.statusSpinner{
+  width:30px;
+  height:30px;
+  border:2px solid rgba(255,255,255,.2);
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:spin .8s linear infinite
+}
+
+#statusText{
+  font-size:10px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  opacity:.8;
+  max-width:80%;
+  line-height:1.5
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+
+#play{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:72px;
+  height:72px;
+  border-radius:50%;
+  background:rgba(0,0,0,.45);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:3
+}
+
+#play.show{
+  display:flex
+}
+
+#play svg{
+  width:24px;
+  fill:#fff
+}
+
+#mute{
+  position:absolute;
+  right:12px;
+  bottom:12px;
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,.45);
+  z-index:4
+}
+
+#mute.show{
+  display:flex
+}
+
+#mute svg{
+  width:18px;
+  fill:#fff
+}
+
+.toolbar{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:center;
+  padding:12px 0 8px
+}
+
+#pick,.action{
+  min-height:44px;
+  padding:12px 17px;
+  text-transform:uppercase;
+  font-size:10px;
+  letter-spacing:.18em
+}
+
+.primary{
+  background:#fff;
+  color:#000;
+  border-color:#fff
+}
+
+.danger{
+  border-color:rgba(255,80,80,.4);
+  color:#ffb0b0
+}
+
+#file{
+  position:absolute;
+  width:1px;
+  height:1px;
+  opacity:0;
+  pointer-events:none
+}
+
+.info{
+  text-align:center;
+  min-height:18px;
+  font-size:10px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--muted)
+}
+
+#progressWrap{
+  display:none;
+  margin:10px auto;
+  max-width:720px
+}
+
+.progressTrack{
+  height:3px;
+  background:#171717;
+  overflow:hidden
+}
+
+.progressBar{
+  height:100%;
+  width:0;
+  background:#fff;
+  transition:width .15s
+}
+
+.progressText{
+  text-align:center;
+  margin-top:7px;
+  font-size:10px;
+  letter-spacing:.1em;
+  color:var(--muted)
+}
+
+#gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
+  gap:8px;
+  margin-top:10px
+}
+
+.card{
+  position:relative;
+  min-width:0;
+  border:1px solid rgba(255,255,255,.1);
+  background:#070707;
+  overflow:hidden
+}
+
+.thumb{
+  aspect-ratio:1.25;
+  display:block;
+  width:100%;
+  object-fit:cover;
+  background:#111
+}
+
+.cardBody{
+  padding:7px
+}
+
+.name{
+  font-size:10px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis
+}
+
+.type{
+  font-size:9px;
+  opacity:.42;
+  margin-top:3px;
+  text-transform:uppercase
+}
+
+.cardBtns{
+  display:flex;
+  gap:5px;
+  margin-top:7px
+}
+
+.cardBtns button{
+  flex:1;
+  padding:7px 4px;
+  font-size:8px;
+  letter-spacing:.08em
+}
+
+.remove{
+  position:absolute;
+  right:5px;
+  top:5px;
+  border-radius:50%;
+  width:25px;
+  height:25px;
+  background:rgba(0,0,0,.7);
+  font-size:14px
+}
+
+.result{
+  color:#ddd
+}
+
+.failed{
+  color:#ff9b9b
+}
+
+footer{
+  text-align:center;
+  padding:6px 16px 22px
+}
+
+.hint{
+  font-size:9px;
+  line-height:1.5;
+  letter-spacing:.08em;
+  opacity:.38;
+  max-width:720px;
+  margin:10px auto
+}
+
+@media(max-width:560px){
+  header{
+    padding-top:16px
   }
 
-  #stage {
-    flex: 1 1 auto;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 0;
-    overflow: hidden;
+  .toolbar{
+    display:grid;
+    grid-template-columns:1fr 1fr
   }
-  #out { display: block; background: #000; }
-  #empty {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-size: 12px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    opacity: 0.35;
-    pointer-events: none;
-    padding: 0 24px;
-  }
-  #play {
-    position: absolute;
-    left: 50%; top: 50%;
-    transform: translate(-50%, -50%);
-    width: 78px; height: 78px;
-    border-radius: 50%;
-    border: 1px solid rgba(255,255,255,0.45);
-    background: rgba(0,0,0,0.38);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    z-index: 3;
-  }
-  #play svg { width: 26px; height: 26px; fill: #fff; }
-  #play.show { display: flex; }
 
-  #mute {
-    position: absolute;
-    right: 12px; bottom: 12px;
-    width: 40px; height: 40px;
-    border: 1px solid rgba(255,255,255,0.22);
-    border-radius: 50%;
-    background: rgba(0,0,0,0.4);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    z-index: 4;
+  .toolbar>*{
+    width:100%;
+    text-align:center
   }
-  #mute svg { width: 18px; height: 18px; fill: #fff; }
-  #mute.show { display: flex; }
 
-  footer {
-    text-align: center;
-    padding: 12px 16px calc(20px + env(safe-area-inset-bottom, 0px));
+  .toolbar #saveAll{
+    grid-column:1/-1
   }
-  #pick {
-    display: inline-block;
-    border: 1px solid rgba(255,255,255,0.32);
-    color: #fff;
-    padding: 13px 38px;
-    font-size: 12px;
-    letter-spacing: 0.32em;
-    text-indent: 0.32em;
-    text-transform: uppercase;
-    cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-tap-highlight-color: transparent;
-    transition: background 0.18s ease, color 0.18s ease;
+
+  .toolbar #clear{
+    grid-column:1/-1
   }
-  #pick:active { background: #fff; color: #000; }
-  #save {
-    display: none;
-    margin: 14px auto 0;
-    border: 1px solid rgba(255,255,255,0.32);
-    color: #fff;
-    background: transparent;
-    padding: 15px 30px;
-    font-size: 12px;
-    font-family: inherit;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-tap-highlight-color: transparent;
-    transition: background 0.18s ease, color 0.18s ease, opacity 0.18s ease;
+
+  #stage{
+    height:48vh;
+    min-height:250px
   }
-  #save.show { display: inline-block; }
-  #save:active { background: #fff; color: #000; }
-  #save:disabled { opacity: 0.55; cursor: default; }
-  #status {
-    display: block;
-    margin: 12px auto 0;
-    min-height: 14px;
-    font-size: 10px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.6);
+
+  #gallery{
+    grid-template-columns:repeat(3,1fr)
   }
-  .hint {
-    margin: 14px 0 0;
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    opacity: 0.4;
+
+  .cardBody{
+    padding:6px
   }
-  #file {
-    position: absolute;
-    width: 1px; height: 1px;
-    opacity: 0;
-    overflow: hidden;
-    pointer-events: none;
+
+  .cardBtns button{
+    font-size:7px
   }
-  #video {
-    position: absolute;
-    top: -9999px;
-    width: 1px; height: 1px;
-    opacity: 0;
-    pointer-events: none;
-  }
+}
 </style>
 </head>
+
 <body>
 
 <header>
@@ -176,510 +402,3032 @@
   <p class="sub">Dark Cinematic Filter</p>
 </header>
 
-<div id="stage">
+<main>
+
+<section id="stage">
+
   <canvas id="out" width="16" height="9"></canvas>
-  <div id="empty">Load a video to begin</div>
-  <button id="play" type="button" aria-label="Play or pause">
-    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+
+  <div id="empty">
+    Choose photos &amp; videos to begin
+  </div>
+
+  <div id="statusOverlay" aria-live="polite">
+    <div class="statusSpinner"></div>
+    <div id="statusText">Loading…</div>
+  </div>
+
+  <button id="play" aria-label="Play or pause">
+    <svg viewBox="0 0 24 24">
+      <path d="M8 5v14l11-7z"/>
+    </svg>
   </button>
-  <button id="mute" type="button" aria-label="Mute or unmute">
-    <svg id="icoVolOn" viewBox="0 0 24 24" style="display:none"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>
-    <svg id="icoVolOff" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm14.6 3 2.7-2.7-1.4-1.4-2.7 2.7-2.7-2.7-1.4 1.4 2.7 2.7-2.7 2.7 1.4 1.4 2.7-2.7 2.7 2.7 1.4-1.4-2.7-2.7z"/></svg>
+
+  <button id="mute" aria-label="Mute or unmute">
+
+    <svg id="icoVolOn" viewBox="0 0 24 24">
+      <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/>
+    </svg>
+
+    <svg id="icoVolOff" viewBox="0 0 24 24">
+      <path d="M3 9v6h4l5 5V4L7 9H3zm14.6 3 2.7-2.7-1.4-1.4-2.7 2.7-2.7-2.7-1.4 1.4 2.7 2.7-2.7 2.7 1.4 1.4 2.7-2.7 2.7 2.7 1.4-1.4-2.7-2.7z"/>
+    </svg>
+
   </button>
+
+</section>
+
+<div class="toolbar">
+
+  <label id="pick" for="file">
+    Choose Media
+  </label>
+
+  <input
+    id="file"
+    type="file"
+    accept="image/*,video/*,.heic,.heif,.jpg,.jpeg,.png,.webp,.mp4,.mov,.m4v,.webm"
+    multiple
+    aria-label="Choose photos and videos"
+  >
+
+  <button id="saveAll" class="action primary" disabled>
+    Save All
+  </button>
+
+  <button id="clear" class="action" disabled>
+    Clear
+  </button>
+
 </div>
 
+<div id="info" class="info">
+  0 / 30 files selected
+</div>
+
+<div
+  id="iosHint"
+  class="info"
+  style="display:none;margin-top:6px;color:rgba(255,255,255,.7)"
+>
+  iPhone tip: if the Photos picker closes without adding the item,
+  open index.html in Safari (not the Files document preview).
+</div>
+
+<div id="progressWrap">
+
+  <div class="progressTrack">
+    <div id="progressBar" class="progressBar"></div>
+  </div>
+
+  <div id="progressText" class="progressText"></div>
+
+</div>
+
+<div id="gallery"></div>
+
 <footer>
-  <label id="pick" for="file">Choose Video</label>
-  <input id="file" type="file" accept="video/*" />
-  <br/>
-  <button id="save" type="button" disabled><span id="saveTxt">&#11015;&#65039; Save Video to Phone</span></button>
-  <span id="status"></span>
-  <p class="hint">Your video stays on this device. On iPhone, tap Save and choose Save Video.</p>
+
+<p class="hint">
+NOIR preserves the original dark grade, muted cool tone, vignette and film grain.
+Video exports are rendered at about 1.5× speed with deliberately reduced frame
+smoothness. On iPhone, Safari may export video without audio because its local
+MediaRecorder APIs do not reliably expose source audio; the app reports that
+limitation instead of leaving processing stuck.
+</p>
+
 </footer>
 
-<video id="video" playsinline preload="auto"></video>
+</main>
+
+<video
+  id="video"
+  playsinline
+  preload="metadata"
+  muted
+></video>
+
 
 <script>
-(function () {
-  "use strict";
+(function(){
 
-  var video    = document.getElementById("video");
-  var canvas   = document.getElementById("out");
-  var ctx      = canvas.getContext("2d", { willReadFrequently: true, alpha: false });
-  var stage    = document.getElementById("stage");
-  var empty    = document.getElementById("empty");
-  var playBtn  = document.getElementById("play");
-  var muteBtn  = document.getElementById("mute");
-  var icoOn    = document.getElementById("icoVolOn");
-  var icoOff   = document.getElementById("icoVolOff");
-  var fileIn   = document.getElementById("file");
-  var saveBtn  = document.getElementById("save");
-  var saveTxt  = document.getElementById("saveTxt");
-  var statusEl = document.getElementById("status");
+"use strict";
 
-  var loaded = false;
-  var needsFrame = true;
-  var vigCache = {};
-  var lastUrl = null;
 
-  /* ---------- tone curve: deep blacks, soft highlights ---------- */
-  var K = 0.55;
-  var curve = new Uint8ClampedArray(256);
-  for (var i = 0; i < 256; i++) {
-    var t = i / 255;
-    var s = t + K * t * (1 - t) * (2 * t - 1); // filmic S-curve
-    curve[i] = s * 0.955 * 255;                // deepen overall
-  }
-  /* cool grade baked per channel: -2 red / 0 green / +4 blue */
-  function ci(v){ return v < 0 ? 0 : v > 255 ? 255 : v; }
-  var lutR = new Uint8ClampedArray(256);
-  var lutG = new Uint8ClampedArray(256);
-  var lutB = new Uint8ClampedArray(256);
-  for (var j = 0; j < 256; j++) {
-    lutR[j] = curve[ci(j - 2)];
-    lutG[j] = curve[ci(j)];
-    lutB[j] = curve[ci(j + 4)];
+/* =========================================================
+   GLOBAL ERROR REPORTING
+   ========================================================= */
+
+window.addEventListener("error",function(e){
+
+  const el=document.getElementById("info");
+
+  if(el){
+    el.textContent=
+      "NOIR error: "+
+      (e.message||"Unexpected error");
   }
 
-  /* ---------- film grain tile ---------- */
-  var T = 256;
-  var grain = new Float32Array(T * T);
-  for (var g = 0; g < grain.length; g++) {
-    grain[g] = (Math.random() * 2 - 1) * 9;
+});
+
+window.addEventListener("unhandledrejection",function(e){
+
+  const el=document.getElementById("info");
+
+  if(el){
+
+    el.textContent=
+      "NOIR error: "+
+      (
+        e.reason &&
+        e.reason.message
+      ) ||
+      e.reason ||
+      "Unexpected error";
+
   }
 
-  function buildVig(w, h) {
-    var arr = new Float32Array(w * h);
-    var cx = w / 2, cy = h / 2;
-    var maxD = Math.sqrt(cx * cx + cy * cy) || 1;
-    for (var y = 0; y < h; y++) {
-      for (var x = 0; x < w; x++) {
-        var dx = (x + 0.5 - cx) / maxD;
-        var dy = (y + 0.5 - cy) / maxD;
-        var d = Math.sqrt(dx * dx + dy * dy);
-        var t = (d - 0.55) / (1.02 - 0.55);
-        t = t < 0 ? 0 : t > 1 ? 1 : t;
-        t = t * t * (3 - 2 * t);
-        arr[y * w + x] = 1 - t * 0.36;
+});
+
+
+/* =========================================================
+   SETTINGS
+   ========================================================= */
+
+const MAX=30;
+const SPEED=1.5;
+const EXPORT_FPS=12;
+const PREVIEW_FPS=12;
+
+
+/* =========================================================
+   ELEMENTS
+   ========================================================= */
+
+const video=document.getElementById("video");
+
+const canvas=document.getElementById("out");
+
+const ctx=canvas.getContext(
+  "2d",
+  {
+    willReadFrequently:true,
+    alpha:false
+  }
+);
+
+const stage=document.getElementById("stage");
+
+const empty=document.getElementById("empty");
+
+const playBtn=document.getElementById("play");
+
+const muteBtn=document.getElementById("mute");
+
+const fileIn=document.getElementById("file");
+
+const saveAll=document.getElementById("saveAll");
+
+const clearBtn=document.getElementById("clear");
+
+const gallery=document.getElementById("gallery");
+
+const info=document.getElementById("info");
+
+const progressWrap=document.getElementById("progressWrap");
+
+const progressBar=document.getElementById("progressBar");
+
+const progressText=document.getElementById("progressText");
+
+const statusOverlay=document.getElementById("statusOverlay");
+
+const statusText=document.getElementById("statusText");
+
+const icoOn=document.getElementById("icoVolOn");
+
+const icoOff=document.getElementById("icoVolOff");
+
+
+/* =========================================================
+   STATE
+   ========================================================= */
+
+let items=[];
+
+let selected=-1;
+
+let raf=0;
+
+let lastPreviewTime=-1;
+
+let previewBusy=false;
+
+
+/* =========================================================
+   FILM GRAIN
+   ========================================================= */
+
+let grain=new Float32Array(256*256);
+
+for(let i=0;i<grain.length;i++){
+
+  grain[i]=(Math.random()*2-1)*9;
+
+}
+
+
+/* =========================================================
+   NOIR LOOK
+   ========================================================= */
+
+const K=.55;
+
+const curve=new Uint8ClampedArray(256);
+
+const lutR=new Uint8ClampedArray(256);
+
+const lutG=new Uint8ClampedArray(256);
+
+const lutB=new Uint8ClampedArray(256);
+
+
+function clamp(v){
+
+  return v<0
+    ?0
+    :v>255
+      ?255
+      :v;
+
+}
+
+
+for(let i=0;i<256;i++){
+
+  let t=i/255;
+
+  let s=
+    t+
+    K*t*(1-t)*(2*t-1);
+
+  curve[i]=
+    s*.955*255;
+
+}
+
+
+for(let i=0;i<256;i++){
+
+  lutR[i]=
+    curve[clamp(i-2)];
+
+  lutG[i]=
+    curve[i];
+
+  lutB[i]=
+    curve[clamp(i+4)];
+
+}
+
+
+/* =========================================================
+   VIGNETTE
+   ========================================================= */
+
+let vigCache={};
+
+
+function buildVig(w,h){
+
+  const a=
+    new Float32Array(w*h);
+
+  const cx=w/2;
+
+  const cy=h/2;
+
+  const maxD=
+    Math.sqrt(cx*cx+cy*cy)||1;
+
+  for(let y=0;y<h;y++){
+
+    for(let x=0;x<w;x++){
+
+      let dx=
+        (x+.5-cx)/maxD;
+
+      let dy=
+        (y+.5-cy)/maxD;
+
+      let d=
+        Math.sqrt(dx*dx+dy*dy);
+
+      let t=
+        (d-.55)/.47;
+
+      t=clamp(t);
+
+      t=
+        t*t*(3-2*t);
+
+      a[y*w+x]=
+        1-t*.36;
+
+    }
+
+  }
+
+  return a;
+
+}
+
+
+function getVig(w,h){
+
+  const key=w+"x"+h;
+
+  if(!vigCache[key]){
+    vigCache[key]=
+      buildVig(w,h);
+  }
+
+  return vigCache[key];
+
+}
+
+
+/* =========================================================
+   APPLY NOIR FILTER
+   ========================================================= */
+
+function paint(c,w,h,vig,source){
+
+  c.drawImage(
+    source,
+    0,
+    0,
+    w,
+    h
+  );
+
+  const img=
+    c.getImageData(
+      0,
+      0,
+      w,
+      h
+    );
+
+  const d=img.data;
+
+  const ox=
+    (Math.random()*256)|0;
+
+  const oy=
+    (Math.random()*256)|0;
+
+  const KS=.6;
+
+  for(let y=0;y<h;y++){
+
+    let row=y*w;
+
+    let gRow=
+      ((y+oy)&255)<<8;
+
+    for(let x=0;x<w;x++){
+
+      let pi=row+x;
+
+      let o=pi*4;
+
+      let r=d[o];
+
+      let g=d[o+1];
+
+      let b=d[o+2];
+
+      let L=
+        r*.2126+
+        g*.7152+
+        b*.0722;
+
+      r=
+        L+(r-L)*KS;
+
+      g=
+        L+(g-L)*KS;
+
+      b=
+        L+(b-L)*KS;
+
+      let v=
+        vig[pi];
+
+      let n=
+        grain[
+          gRow|
+          ((x+ox)&255)
+        ];
+
+      d[o]=
+        clamp(
+          lutR[r|0]*v+n
+        );
+
+      d[o+1]=
+        clamp(
+          lutG[g|0]*v+n
+        );
+
+      d[o+2]=
+        clamp(
+          lutB[b|0]*v+n
+        );
+
+    }
+
+  }
+
+  c.putImageData(img,0,0);
+
+}
+
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+
+function isVideo(it){
+
+  return it.kind==="video";
+
+}
+
+
+function isIOS(){
+
+  return /iPad|iPhone|iPod/.test(
+    navigator.userAgent
+  ) ||
+  (
+    navigator.platform==="MacIntel" &&
+    navigator.maxTouchPoints>1
+  );
+
+}
+
+
+function showStatus(message){
+
+  statusText.textContent=
+    message;
+
+  statusOverlay.classList.add(
+    "show"
+  );
+
+}
+
+
+function hideStatus(){
+
+  statusOverlay.classList.remove(
+    "show"
+  );
+
+}
+
+
+function fileDataURL(file){
+
+  return new Promise(
+    function(resolve,reject){
+
+      const reader=
+        new FileReader();
+
+      reader.onload=
+        function(){
+
+          resolve(
+            reader.result
+          );
+
+        };
+
+      reader.onerror=
+        function(){
+
+          reject(
+            new Error(
+              "Could not read file."
+            )
+          );
+
+        };
+
+      reader.readAsDataURL(file);
+
+    }
+  );
+
+}
+
+
+function baseName(name){
+
+  return name
+    .replace(/\.[^/.]+$/,"")
+    .replace(/[^\w\- ]+/g,"")
+    .trim()
+    .slice(0,80) ||
+    "noir";
+
+}
+
+
+function extForMime(mime){
+
+  if(mime.includes("webm"))
+    return "webm";
+
+  if(mime.includes("mp4"))
+    return "mp4";
+
+  return "webm";
+
+}
+
+
+/* =========================================================
+   VIDEO MIME
+   ========================================================= */
+
+function pickVideoMime(){
+
+  const types=[
+    "video/webm;codecs=vp9",
+    "video/webm;codecs=vp8",
+    "video/webm",
+    "video/mp4"
+  ];
+
+  for(const type of types){
+
+    if(
+      window.MediaRecorder &&
+      MediaRecorder.isTypeSupported &&
+      MediaRecorder.isTypeSupported(type)
+    ){
+
+      return type;
+
+    }
+
+  }
+
+  return "";
+
+}
+
+
+/* =========================================================
+   CANVAS FIT
+   ========================================================= */
+
+function fitCanvas(w,h){
+
+  if(!w||!h)return;
+
+  const maxW=1600;
+
+  const maxH=1600;
+
+  const scale=
+    Math.min(
+      1,
+      maxW/w,
+      maxH/h
+    );
+
+  canvas.width=
+    Math.max(
+      1,
+      Math.round(w*scale)
+    );
+
+  canvas.height=
+    Math.max(
+      1,
+      Math.round(h*scale)
+    );
+
+}
+
+
+/* =========================================================
+   PROGRESS
+   ========================================================= */
+
+function setProgress(
+  current,
+  total,
+  message
+){
+
+  progressWrap.style.display=
+    "block";
+
+  const percent=
+    total
+      ? Math.max(
+          0,
+          Math.min(
+            100,
+            current/total*100
+          )
+        )
+      : 0;
+
+  progressBar.style.width=
+    percent+"%";
+
+  progressText.textContent=
+    message||"";
+
+}
+
+
+/* =========================================================
+   INFO
+   ========================================================= */
+
+function updateInfo(){
+
+  info.textContent=
+    items.length+
+    " / "+
+    MAX+
+    " files selected";
+
+  saveAll.disabled=
+    items.length===0;
+
+  clearBtn.disabled=
+    items.length===0;
+
+}
+
+
+/* =========================================================
+   FILE DETECTION
+   ========================================================= */
+
+function detectKind(file){
+
+  const type=
+    (file.type||"").toLowerCase();
+
+  const name=
+    (file.name||"").toLowerCase();
+
+  if(
+    type.startsWith("video/") ||
+    /\.(mp4|mov|m4v|webm|ogv|avi)$/i.test(name)
+  ){
+
+    return "video";
+
+  }
+
+  if(
+    type.startsWith("image/") ||
+    /\.(jpg|jpeg|png|webp|gif|bmp|heic|heif|avif)$/i.test(name)
+  ){
+
+    return "image";
+
+  }
+
+  return "";
+
+}
+
+
+/* =========================================================
+   FILE INPUT
+   ========================================================= */
+
+fileIn.addEventListener(
+  "change",
+  async function(){
+
+    const selectedFiles=
+      Array.from(
+        fileIn.files||[]
+      );
+
+    if(!selectedFiles.length)
+      return;
+
+    const remaining=
+      MAX-items.length;
+
+    if(remaining<=0){
+
+      info.textContent=
+        "Maximum of "+
+        MAX+
+        " files reached.";
+
+      fileIn.value="";
+
+      return;
+
+    }
+
+    const files=
+      selectedFiles.slice(
+        0,
+        remaining
+      );
+
+    for(const file of files){
+
+      const kind=
+        detectKind(file);
+
+      if(!kind){
+
+        continue;
+
       }
+
+      const url=
+        URL.createObjectURL(file);
+
+      items.push({
+
+        file:file,
+
+        kind:kind,
+
+        url:url,
+
+        dataURL:null,
+
+        result:null,
+
+        error:null,
+
+        busy:false
+
+      });
+
     }
-    return arr;
+
+    fileIn.value="";
+
+    renderGallery();
+
+    updateInfo();
+
+    if(items.length){
+
+      selectItem(
+        Math.max(
+          0,
+          items.length-1
+        )
+      );
+
+    }
+
   }
-  function getVig(w, h) {
-    var k = w + "x" + h;
-    if (!vigCache[k]) vigCache[k] = buildVig(w, h);
-    return vigCache[k];
-  }
+);
 
-  function fit() {
-    var r = stage.getBoundingClientRect();
-    var vw = video.videoWidth || 16;
-    var vh = video.videoHeight || 9;
-    var s = Math.min(r.width / vw, r.height / vh);
-    if (!isFinite(s) || s <= 0) return;
-    var w = Math.max(2, Math.round(vw * s));
-    var h = Math.max(2, Math.round(vh * s));
-    var cap = 1280;
-    if (w > cap) { h = Math.round(h * cap / w); w = cap; }
-    canvas.width = w;
-    canvas.height = h;
-    canvas.style.width = w + "px";
-    canvas.style.height = h + "px";
-    getVig(w, h);
-    needsFrame = true;
-  }
 
-  function paint(c2d, w, h, vigArr) {
-    c2d.drawImage(video, 0, 0, w, h);
-    var img = c2d.getImageData(0, 0, w, h);
-    var data = img.data;
-    var ox = (Math.random() * T) | 0;
-    var oy = (Math.random() * T) | 0;
-    var KS = 0.6; /* saturation kept: 60% -> muted cool-gray */
+/* =========================================================
+   GALLERY
+   ========================================================= */
 
-    for (var y = 0; y < h; y++) {
-      var row = y * w;
-      var gRow = ((y + oy) & 255) << 8;
-      for (var x = 0; x < w; x++) {
-        var pi = row + x;
-        var o = pi * 4;
-        var r = data[o], gg = data[o + 1], b = data[o + 2];
+function renderGallery(){
 
-        var L = r * 0.2126 + gg * 0.7152 + b * 0.0722;
-        r  = L + (r - L) * KS;
-        gg = L + (gg - L) * KS;
-        b  = L + (b - L) * KS;
+  gallery.innerHTML="";
 
-        var v = vigArr[pi];
-        var n = grain[gRow | ((x + ox) & 255)];
+  items.forEach(
+    function(it,index){
 
-        data[o]     = lutR[r | 0] * v + n;
-        data[o + 1] = lutG[gg | 0] * v + n;
-        data[o + 2] = lutB[b | 0] * v + n;
+      const card=
+        document.createElement(
+          "div"
+        );
+
+      card.className=
+        "card";
+
+      const thumb=
+        document.createElement(
+          it.kind==="video"
+            ? "video"
+            : "img"
+        );
+
+      thumb.className=
+        "thumb";
+
+      thumb.src=
+        it.url;
+
+      if(it.kind==="video"){
+
+        thumb.muted=true;
+
+        thumb.playsInline=true;
+
+        thumb.preload=
+          "metadata";
+
       }
+
+      const body=
+        document.createElement(
+          "div"
+        );
+
+      body.className=
+        "cardBody";
+
+      const name=
+        document.createElement(
+          "div"
+        );
+
+      name.className="name";
+
+      name.textContent=
+        it.file.name;
+
+      const type=
+        document.createElement(
+          "div"
+        );
+
+      type.className="type";
+
+      type.textContent=
+        it.kind;
+
+      const buttons=
+        document.createElement(
+          "div"
+        );
+
+      buttons.className=
+        "cardBtns";
+
+      const use=
+        document.createElement(
+          "button"
+        );
+
+      use.textContent=
+        "Preview";
+
+      use.onclick=
+        function(e){
+
+          e.stopPropagation();
+
+          selectItem(index);
+
+        };
+
+      const save=
+        document.createElement(
+          "button"
+        );
+
+      save.textContent=
+        it.busy
+          ? "Working…"
+          : it.result
+            ? "Save"
+            : "Export";
+
+      save.disabled=
+        it.busy;
+
+      save.onclick=
+        async function(e){
+
+          e.stopPropagation();
+
+          if(it.result){
+
+            await saveBlob(
+              it.result.blob,
+              it.result.name
+            );
+
+          }else{
+
+            await exportOne(index);
+
+          }
+
+        };
+
+      buttons.appendChild(use);
+
+      buttons.appendChild(save);
+
+      if(it.error){
+
+        const error=
+          document.createElement(
+            "div"
+          );
+
+        error.className=
+          "failed";
+
+        error.style.fontSize=
+          "8px";
+
+        error.style.marginTop=
+          "6px";
+
+        error.textContent=
+          it.error;
+
+        body.appendChild(
+          error
+        );
+
+      }
+
+      body.appendChild(name);
+
+      body.appendChild(type);
+
+      body.appendChild(buttons);
+
+      card.appendChild(thumb);
+
+      card.appendChild(body);
+
+
+      const remove=
+        document.createElement(
+          "button"
+        );
+
+      remove.className=
+        "remove";
+
+      remove.textContent="×";
+
+      remove.setAttribute(
+        "aria-label",
+        "Remove"
+      );
+
+      remove.onclick=
+        function(e){
+
+          e.stopPropagation();
+
+          removeItem(index);
+
+        };
+
+      card.appendChild(remove);
+
+      card.onclick=
+        function(){
+
+          selectItem(index);
+
+        };
+
+      gallery.appendChild(card);
+
     }
-    c2d.putImageData(img, 0, 0);
-  }
+  );
 
-  function draw() {
-    var w = canvas.width, h = canvas.height;
-    if (w < 2 || h < 2) return;
-    paint(ctx, w, h, getVig(w, h));
-  }
+}
 
-  function loop() {
-    requestAnimationFrame(loop);
-    if (!loaded || video.readyState < 2) return;
-    if (!video.paused) {
-      draw();
-    } else if (needsFrame) {
-      needsFrame = false;
-      draw();
-    }
-  }
 
-  function updateOverlay() {
-    playBtn.classList.toggle("show", loaded && video.paused);
-  }
-  function updateMute() {
-    icoOn.style.display  = video.muted ? "none" : "block";
-    icoOff.style.display = video.muted ? "block" : "none";
-  }
-  function togglePlay() {
-    if (video.paused) { video.play(); } else { video.pause(); }
-  }
+/* =========================================================
+   REMOVE ITEM
+   ========================================================= */
 
-  fileIn.addEventListener("change", function () {
-    var f = fileIn.files && fileIn.files[0];
-    fileIn.value = "";
-    if (!f) return;
-    if (lastUrl) { try { URL.revokeObjectURL(lastUrl); } catch (e) {} lastUrl = null; }
-    resetExport();
-    saveBtn.disabled = true;
-    saveBtn.classList.remove("show");
-    saveTxt.textContent = "\u2B07\uFE0F Save Video to Phone";
-    statusEl.textContent = "";
-    if (window.URL && URL.createObjectURL) {
-      var url = URL.createObjectURL(f);
-      video.src = url;
-    } else if (video.canPlayType) {
-      var rf = new FileReader();
-      rf.onload = function () { video.src = rf.result; };
-      rf.readAsDataURL(f);
-    }
+function removeItem(index){
+
+  const it=
+    items[index];
+
+  if(!it)return;
+
+  try{
+
+    URL.revokeObjectURL(
+      it.url
+    );
+
+  }catch(e){}
+
+  items.splice(
+    index,
+    1
+  );
+
+  if(selected===index){
+
+    selected=-1;
+
+    video.pause();
+
+    video.removeAttribute(
+      "src"
+    );
+
     video.load();
-  });
 
-  video.addEventListener("loadedmetadata", function () { fit(); });
-  video.addEventListener("loadeddata", function () {
-    loaded = true;
-    empty.style.display = "none";
-    muteBtn.classList.add("show");
-    saveBtn.classList.add("show");
-    saveBtn.disabled = false;
-    fit();
-    draw();
-    updateMute();
-    /* first frame shows immediately; try muted autoplay for instant motion */
-    video.muted = true;
-    updateMute();
-    var p;
-    try { p = video.play(); } catch (e) { p = null; }
-    if (p && p.then) {
-      p.then(updateOverlay).catch(function () {
-        video.muted = false;
-        updateMute();
-        updateOverlay();
-      });
-    } else {
-      video.muted = false;
-      updateMute();
-      updateOverlay();
+    muteBtn.classList.remove(
+      "show"
+    );
+
+    playBtn.classList.remove(
+      "show"
+    );
+
+    empty.style.display=
+      "flex";
+
+    ctx.fillStyle="#000";
+
+    ctx.fillRect(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+  }else if(selected>index){
+
+    selected--;
+
+  }
+
+  renderGallery();
+
+  updateInfo();
+
+}
+
+
+/* =========================================================
+   CLEAR
+   ========================================================= */
+
+clearBtn.addEventListener(
+  "click",
+  function(){
+
+    items.forEach(
+      function(it){
+
+        try{
+
+          URL.revokeObjectURL(
+            it.url
+          );
+
+        }catch(e){}
+
+      }
+    );
+
+    items=[];
+
+    selected=-1;
+
+    video.pause();
+
+    video.removeAttribute(
+      "src"
+    );
+
+    video.load();
+
+    gallery.innerHTML="";
+
+    empty.style.display=
+      "flex";
+
+    muteBtn.classList.remove(
+      "show"
+    );
+
+    playBtn.classList.remove(
+      "show"
+    );
+
+    ctx.fillStyle="#000";
+
+    ctx.fillRect(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+    progressWrap.style.display=
+      "none";
+
+    updateInfo();
+
+  }
+);
+
+
+/* =========================================================
+   IMAGE LOADING
+   ========================================================= */
+
+function loadImage(src){
+
+  return new Promise(
+    function(resolve,reject){
+
+      const im=
+        new Image();
+
+      im.onload=
+        function(){
+
+          resolve(im);
+
+        };
+
+      im.onerror=
+        function(){
+
+          reject(
+            new Error(
+              "Could not read image."
+            )
+          );
+
+        };
+
+      im.src=src;
+
     }
-  });
-  video.addEventListener("play",  updateOverlay);
-  video.addEventListener("pause", function () { needsFrame = true; updateOverlay(); });
-  video.addEventListener("ended", updateOverlay);
-  video.addEventListener("seeked", function () { needsFrame = true; });
-  video.addEventListener("volumechange", updateMute);
+  );
 
-  playBtn.addEventListener("click", function (e) { e.stopPropagation(); togglePlay(); });
-  muteBtn.addEventListener("click", function (e) {
-    e.stopPropagation();
-    video.muted = !video.muted;
-  });
-  stage.addEventListener("click", function () { if (loaded) togglePlay(); });
+}
 
-  window.addEventListener("resize", function () { fit(); });
-  window.addEventListener("orientationchange", function () { setTimeout(fit, 120); });
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener("resize", function () { fit(); });
-  }
 
-  /* ---------- EXPORT: iOS-safe filtered video export ---------- */
-  function isIOS() {
-    return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-  }
+/* =========================================================
+   SELECT MEDIA
+   ========================================================= */
 
-  function pickMime() {
-    if (!window.MediaRecorder) return null;
-    var types = isIOS()
-      ? ["video/mp4;codecs=avc1,mp4a.40.2", "video/mp4;codecs=avc1", "video/mp4"]
-      : ["video/webm;codecs=vp9", "video/webm;codecs=vp8", "video/webm", "video/mp4"];
-    for (var i = 0; i < types.length; i++) {
-      try {
-        if (MediaRecorder.isTypeSupported(types[i])) return types[i];
-      } catch (e) {}
-    }
-    return null;
-  }
+async function selectItem(i){
 
-  function setStatus(t){ statusEl.textContent = t; }
+  const it=
+    items[i];
 
-  function shareOrDownload(blob, name) {
-    var fl = null;
-    try { fl = new File([blob], name, { type: blob.type || "video/mp4" }); } catch (e) {}
+  if(!it)
+    return;
 
-    /* iPhone: Share Sheet is the most reliable way to put the finished
-       video into Photos/Files. */
-    if (isIOS() && navigator.share && fl) {
-      try {
-        if (!navigator.canShare || navigator.canShare({ files: [fl] })) {
-          navigator.share({ files: [fl], title: "NOIR filtered video" })
-            .then(function () {
-              setStatus("Done — choose Save Video in the Share menu");
-            })
-            .catch(function () {});
-          return;
+  selected=i;
+
+  showStatus(
+    "Loading "+
+    (
+      it.kind==="video"
+        ? "video"
+        : "photo"
+    )+
+    "…"
+  );
+
+  video.pause();
+
+  /*
+   IMPORTANT FIX:
+
+   We DO NOT revoke it.url here.
+
+   it.url belongs to the actual file.
+   Revoking it while switching previews
+   makes the file unusable later.
+  */
+
+  try{
+
+    if(it.kind==="video"){
+
+      video.src=
+        it.url;
+
+      video.muted=
+        true;
+
+      video.playsInline=
+        true;
+
+      video.preload=
+        "auto";
+
+      video.playbackRate=
+        SPEED;
+
+
+      await new Promise(
+        function(resolve,reject){
+
+          let finished=false;
+
+          function cleanup(){
+
+            video.removeEventListener(
+              "loadedmetadata",
+              success
+            );
+
+            video.removeEventListener(
+              "canplay",
+              success
+            );
+
+            video.removeEventListener(
+              "error",
+              failure
+            );
+
+          }
+
+          function success(){
+
+            if(finished)return;
+
+            finished=true;
+
+            cleanup();
+
+            resolve();
+
+          }
+
+          function failure(){
+
+            if(finished)return;
+
+            finished=true;
+
+            cleanup();
+
+            reject(
+              new Error(
+                "Safari could not decode this video."
+              )
+            );
+
+          }
+
+          video.addEventListener(
+            "loadedmetadata",
+            success
+          );
+
+          video.addEventListener(
+            "canplay",
+            success
+          );
+
+          video.addEventListener(
+            "error",
+            failure
+          );
+
+          video.load();
+
+          setTimeout(
+            function(){
+
+              if(finished)return;
+
+              finished=true;
+
+              cleanup();
+
+              reject(
+                new Error(
+                  "Video loading timed out. Try opening index.html in Safari."
+                )
+              );
+
+            },
+            15000
+          );
+
         }
-      } catch (e) {}
-    }
+      );
 
-    var url = null;
-    try { url = URL.createObjectURL(blob); } catch (e) {}
-    if (url) {
-      var a = document.createElement("a");
-      a.href = url;
-      a.download = name;
-      a.rel = "noopener";
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(function () {
-        try { document.body.removeChild(a); } catch (e) {}
-        try { URL.revokeObjectURL(url); } catch (e) {}
-      }, 1000);
-    }
-  }
 
-  var exportState = "idle";
-  var exportBlob = null;
-  var exportName = null;
+      if(
+        !video.videoWidth ||
+        !video.videoHeight
+      ){
 
-  function resetExport() {
-    exportState = "idle";
-    exportBlob = null;
-    exportName = null;
-  }
+        throw new Error(
+          "Video has no readable dimensions."
+        );
 
-  function doExport() {
-    if (exportState !== "idle" || !loaded) return;
-
-    var mime = pickMime();
-    if (!mime) {
-      setStatus("This browser cannot export video");
-      return;
-    }
-
-    /* captureStream/requestFrame are not equally reliable on iOS.
-       Stop using a 0fps canvas stream there; capture a normal frame stream
-       and explicitly request frames when available. */
-    if (!canvas.captureStream) {
-      setStatus("Video export is not supported on this iPhone browser");
-      return;
-    }
-
-    exportState = "exporting";
-    saveBtn.disabled = true;
-    saveTxt.textContent = "\u2B07\uFE0F Processing video\u2026";
-    setStatus("Processing video\u2026 0%");
-
-    try { video.pause(); } catch (e) {}
-
-    var w = video.videoWidth, h = video.videoHeight;
-    if (!w || !h) {
-      exportState = "idle";
-      saveBtn.disabled = false;
-      setStatus("Export failed");
-      return;
-    }
-
-    var cap = isIOS() ? 960 : 1280;
-    if (w > cap) { h = Math.round(h * cap / w); w = cap; }
-
-    var off = document.createElement("canvas");
-    off.width = w;
-    off.height = h;
-    var octx = off.getContext("2d", { alpha: false, willReadFrequently: true });
-    if (!octx) {
-      exportState = "idle";
-      saveBtn.disabled = false;
-      setStatus("Export failed");
-      return;
-    }
-
-    var vigArr = getVig(w, h);
-    var stream;
-    try {
-      stream = off.captureStream(30);
-    } catch (e) {
-      exportState = "idle";
-      saveBtn.disabled = false;
-      setStatus("Could not start video export");
-      return;
-    }
-
-    var rec;
-    try {
-      rec = new MediaRecorder(stream, {
-        mimeType: mime,
-        videoBitsPerSecond: isIOS() ? 2500000 : Math.max(1500000, Math.round(w * h * 0.14))
-      });
-    } catch (e) {
-      try { rec = new MediaRecorder(stream); }
-      catch (e2) {
-        exportState = "idle";
-        saveBtn.disabled = false;
-        setStatus("Could not start video export");
-        return;
       }
+
+
+      fitCanvas(
+        video.videoWidth,
+        video.videoHeight
+      );
+
+      empty.style.display=
+        "none";
+
+      drawVideoPreview();
+
+      muteBtn.classList.add(
+        "show"
+      );
+
+      playBtn.classList.add(
+        "show"
+      );
+
+      hideStatus();
+
+
+      try{
+
+        await video.play();
+
+        playBtn.classList.remove(
+          "show"
+        );
+
+      }catch(e){}
+
+    }else{
+
+      let im;
+
+      try{
+
+        im=
+          await loadImage(
+            it.url
+          );
+
+      }catch(e){
+
+        /*
+         iOS fallback:
+         read the original File as
+         a Data URL.
+        */
+
+        if(!it.dataURL){
+
+          it.dataURL=
+            await fileDataURL(
+              it.file
+            );
+
+        }
+
+        im=
+          await loadImage(
+            it.dataURL
+          );
+
+      }
+
+
+      if(
+        !im.naturalWidth ||
+        !im.naturalHeight
+      ){
+
+        throw new Error(
+          "Photo has no readable dimensions."
+        );
+
+      }
+
+
+      fitCanvas(
+        im.naturalWidth,
+        im.naturalHeight
+      );
+
+      paint(
+        ctx,
+        canvas.width,
+        canvas.height,
+        getVig(
+          canvas.width,
+          canvas.height
+        ),
+        im
+      );
+
+      empty.style.display=
+        "none";
+
+      muteBtn.classList.remove(
+        "show"
+      );
+
+      playBtn.classList.remove(
+        "show"
+      );
+
+      hideStatus();
+
     }
 
-    var chunks = [];
-    rec.ondataavailable = function (e) {
-      if (e.data && e.data.size > 0) chunks.push(e.data);
+  }catch(e){
+
+    hideStatus();
+
+    it.error=
+      e.message ||
+      "Could not load this media.";
+
+    info.textContent=
+      it.error;
+
+    renderGallery();
+
+    empty.style.display=
+      "flex";
+
+    ctx.fillStyle=
+      "#080808";
+
+    ctx.fillRect(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   VIDEO PREVIEW
+   ========================================================= */
+
+function drawVideoPreview(){
+
+  if(
+    selected<0 ||
+    !items[selected] ||
+    items[selected].kind!=="video" ||
+    video.readyState<2
+  ){
+
+    return;
+
+  }
+
+  paint(
+    ctx,
+    canvas.width,
+    canvas.height,
+    getVig(
+      canvas.width,
+      canvas.height
+    ),
+    video
+  );
+
+}
+
+
+function previewLoop(){
+
+  requestAnimationFrame(
+    previewLoop
+  );
+
+  if(
+    selected<0 ||
+    !items[selected] ||
+    items[selected].kind!=="video" ||
+    video.paused ||
+    video.readyState<2
+  ){
+
+    return;
+
+  }
+
+  if(
+    video.currentTime-
+    lastPreviewTime >=
+    1/PREVIEW_FPS
+  ){
+
+    lastPreviewTime=
+      video.currentTime;
+
+    drawVideoPreview();
+
+  }
+
+}
+
+previewLoop();
+
+
+/* =========================================================
+   VIDEO CONTROLS
+   ========================================================= */
+
+playBtn.onclick=
+  function(){
+
+    if(video.paused){
+
+      video.play()
+        .then(
+          function(){
+
+            playBtn.classList.remove(
+              "show"
+            );
+
+          }
+        )
+        .catch(
+          function(){}
+        );
+
+    }else{
+
+      video.pause();
+
+      playBtn.classList.add(
+        "show"
+      );
+
+    }
+
+  };
+
+
+muteBtn.onclick=
+  function(){
+
+    video.muted=
+      !video.muted;
+
+    icoOn.style.display=
+      video.muted
+        ? "none"
+        : "block";
+
+    icoOff.style.display=
+      video.muted
+        ? "block"
+        : "none";
+
+  };
+
+
+stage.addEventListener(
+  "click",
+  function(e){
+
+    if(
+      e.target===stage ||
+      e.target===canvas
+    ){
+
+      if(
+        selected>=0 &&
+        items[selected] &&
+        items[selected].kind==="video"
+      ){
+
+        playBtn.click();
+
+      }
+
+    }
+
+  }
+);
+
+
+video.addEventListener(
+  "pause",
+  function(){
+
+    playBtn.classList.add(
+      "show"
+    );
+
+  }
+);
+
+
+video.addEventListener(
+  "play",
+  function(){
+
+    playBtn.classList.remove(
+      "show"
+    );
+
+  }
+);
+
+
+/* =========================================================
+   IMAGE EXPORT
+   ========================================================= */
+
+async function imageBlob(it){
+
+  let im;
+
+  try{
+
+    im=
+      await loadImage(
+        it.url
+      );
+
+  }catch(e){
+
+    if(!it.dataURL){
+
+      it.dataURL=
+        await fileDataURL(
+          it.file
+        );
+
+    }
+
+    im=
+      await loadImage(
+        it.dataURL
+      );
+
+  }
+
+
+  const max=1600;
+
+  const scale=
+    Math.min(
+      1,
+      max/im.naturalWidth,
+      max/im.naturalHeight
+    );
+
+  const w=
+    Math.max(
+      1,
+      Math.round(
+        im.naturalWidth*scale
+      )
+    );
+
+  const h=
+    Math.max(
+      1,
+      Math.round(
+        im.naturalHeight*scale
+      )
+    );
+
+
+  const c=
+    document.createElement(
+      "canvas"
+    );
+
+  c.width=w;
+
+  c.height=h;
+
+
+  paint(
+    c.getContext(
+      "2d",
+      {
+        willReadFrequently:true
+      }
+    ),
+    w,
+    h,
+    getVig(w,h),
+    im
+  );
+
+
+  return new Promise(
+    function(resolve,reject){
+
+      c.toBlob(
+        function(blob){
+
+          if(blob){
+
+            resolve(blob);
+
+          }else{
+
+            reject(
+              new Error(
+                "Could not encode image."
+              )
+            );
+
+          }
+
+        },
+        "image/jpeg",
+        .92
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   VIDEO EXPORT
+   ========================================================= */
+
+async function videoBlob(
+  it,
+  progress
+){
+
+  const mime=
+    pickVideoMime();
+
+  if(!mime){
+
+    throw new Error(
+      "This browser cannot export video."
+    );
+
+  }
+
+  if(!canvas.captureStream){
+
+    throw new Error(
+      "Canvas video export is unavailable in this browser."
+    );
+
+  }
+
+
+  const v=
+    document.createElement(
+      "video"
+    );
+
+  v.src=
+    it.url;
+
+  v.playsInline=
+    true;
+
+  v.preload=
+    "auto";
+
+  v.muted=
+    false;
+
+  v.playbackRate=
+    SPEED;
+
+
+  await new Promise(
+    function(resolve,reject){
+
+      v.onloadedmetadata=
+        function(){
+
+          resolve();
+
+        };
+
+      v.onerror=
+        function(){
+
+          reject(
+            new Error(
+              "Could not read video."
+            )
+          );
+
+        };
+
+    }
+  );
+
+
+  const vw=v.videoWidth;
+
+  const vh=v.videoHeight;
+
+
+  if(!vw||!vh){
+
+    throw new Error(
+      "Video has no usable dimensions."
+    );
+
+  }
+
+
+  const cap=
+    isIOS()
+      ? 960
+      : 1280;
+
+  const scale=
+    Math.min(
+      1,
+      cap/vw
+    );
+
+  const w=
+    Math.max(
+      2,
+      Math.round(vw*scale)
+    );
+
+  const h=
+    Math.max(
+      2,
+      Math.round(vh*scale)
+    );
+
+
+  const c=
+    document.createElement(
+      "canvas"
+    );
+
+  c.width=w;
+
+  c.height=h;
+
+
+  const cctx=
+    c.getContext(
+      "2d",
+      {
+        alpha:false,
+        willReadFrequently:true
+      }
+    );
+
+
+  const vig=
+    getVig(w,h);
+
+  const stream=
+    c.captureStream(
+      EXPORT_FPS
+    );
+
+
+  let audioAttached=false;
+
+
+  /*
+   Audio capture is attempted on
+   browsers that support it.
+  */
+
+  if(
+    !isIOS() &&
+    v.captureStream
+  ){
+
+    try{
+
+      const vs=
+        v.captureStream();
+
+      vs.getAudioTracks()
+        .forEach(
+          function(track){
+
+            stream.addTrack(
+              track
+            );
+
+            audioAttached=true;
+
+          }
+        );
+
+    }catch(e){}
+
+  }
+
+
+  let rec;
+
+  try{
+
+    rec=
+      new MediaRecorder(
+        stream,
+        {
+          mimeType:mime,
+          videoBitsPerSecond:
+            isIOS()
+              ? 2500000
+              : Math.max(
+                  1500000,
+                  Math.round(
+                    w*h*.14
+                  )
+                )
+        }
+      );
+
+  }catch(e){
+
+    rec=
+      new MediaRecorder(
+        stream
+      );
+
+  }
+
+
+  const chunks=[];
+
+
+  rec.ondataavailable=
+    function(e){
+
+      if(
+        e.data &&
+        e.data.size
+      ){
+
+        chunks.push(
+          e.data
+        );
+
+      }
+
     };
 
-    var raf = 0;
-    var done = false;
-    var duration = video.duration || 0;
-    var startedAt = Date.now();
 
-    function cleanup() {
-      cancelAnimationFrame(raf);
-      try { video.pause(); } catch (e) {}
-      video.removeEventListener("ended", finish);
-      try {
-        stream.getTracks().forEach(function(t) { t.stop(); });
-      } catch (e) {}
-    }
+  const duration=
+    v.duration||0;
 
-    function finish() {
-      if (done) return;
-      done = true;
-      cleanup();
-      try { rec.stop(); } catch (e) {}
-    }
 
-    rec.onstop = function () {
-      var mimePlain = (rec.mimeType || mime || "video/mp4").split(";")[0];
-      var ext = /mp4/i.test(mimePlain) ? "mp4" : "webm";
-      var blob = new Blob(chunks, { type: mimePlain });
+  return new Promise(
+    function(resolve,reject){
 
-      if (blob.size < 4096 || !chunks.length) {
-        exportState = "idle";
-        saveBtn.disabled = false;
-        saveTxt.textContent = "\u2B07\uFE0F Save Video to Phone";
-        setStatus("Export produced no data");
-        return;
+      let stopped=false;
+
+      let last=-1;
+
+      let timer=0;
+
+
+      function cleanup(){
+
+        clearInterval(
+          timer
+        );
+
+        try{
+          v.pause();
+        }catch(e){}
+
+        stream
+          .getTracks()
+          .forEach(
+            function(track){
+
+              try{
+                track.stop();
+              }catch(e){}
+
+            }
+          );
+
       }
 
-      exportBlob = blob;
-      exportName = "noir-filtered-" +
-        new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-") + "." + ext;
-      exportState = "ready";
-      saveBtn.disabled = false;
-      saveTxt.textContent = "\u2B07\uFE0F Save Filtered Video";
-      setStatus(isIOS()
-        ? "Ready — tap Save, then choose Save Video"
-        : "Ready — tap Save to get the filtered video");
+
+      function finish(){
+
+        if(stopped)
+          return;
+
+        stopped=true;
+
+        cleanup();
+
+        try{
+          rec.stop();
+        }catch(e){}
+
+      }
+
+
+      v.onerror=
+        function(){
+
+          cleanup();
+
+          reject(
+            new Error(
+              "Video playback failed."
+            )
+          );
+
+        };
+
+
+      rec.onerror=
+        function(){
+
+          cleanup();
+
+          reject(
+            new Error(
+              "Browser video recorder failed."
+            )
+          );
+
+        };
+
+
+      rec.onstop=
+        function(){
+
+          const type=
+            (
+              rec.mimeType ||
+              mime
+            ).split(";")[0];
+
+          const blob=
+            new Blob(
+              chunks,
+              {
+                type:type
+              }
+            );
+
+
+          if(blob.size<4096){
+
+            reject(
+              new Error(
+                "Video export produced no data."
+              )
+            );
+
+          }else{
+
+            resolve({
+              blob:blob,
+              audio:audioAttached,
+              mime:type
+            });
+
+          }
+
+        };
+
+
+      function frame(){
+
+        if(stopped)
+          return;
+
+        paint(
+          cctx,
+          w,
+          h,
+          vig,
+          v
+        );
+
+
+        const cur=
+          v.currentTime||0;
+
+
+        if(cur!==last){
+
+          last=cur;
+
+          progress(
+            Math.min(
+              99,
+              duration
+                ? Math.round(
+                    cur/duration*100
+                  )
+                : 0
+            )
+          );
+
+        }
+
+
+        if(
+          duration &&
+          cur>=duration-.04
+        ){
+
+          finish();
+
+        }
+
+      }
+
+
+      try{
+
+        rec.start(250);
+
+      }catch(e){
+
+        reject(
+          new Error(
+            "Could not start video recorder."
+          )
+        );
+
+        return;
+
+      }
+
+
+      timer=
+        setInterval(
+          frame,
+          Math.max(
+            1000/EXPORT_FPS,
+            70
+          )
+        );
+
+
+      frame();
+
+
+      v.currentTime=0;
+
+      v.playbackRate=
+        SPEED;
+
+
+      v.play()
+        .catch(
+          function(){
+
+            cleanup();
+
+            reject(
+              new Error(
+                "Tap the preview to allow video playback, then export again."
+              )
+            );
+
+          }
+        );
+
+
+      setTimeout(
+        function(){
+
+          if(!stopped)
+            finish();
+
+        },
+        Math.max(
+          15000,
+          (duration/SPEED+8)*1000
+        )
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   PROCESS ONE FILE
+   ========================================================= */
+
+async function processItem(
+  it,
+  progress
+){
+
+  if(it.kind==="image"){
+
+    const blob=
+      await imageBlob(it);
+
+    return {
+
+      blob:blob,
+
+      name:
+        baseName(
+          it.file.name
+        )+
+        "-noir.jpg",
+
+      mime:blob.type
+
     };
 
-    function paintFrame() {
-      if (exportState !== "exporting") return;
-      paint(octx, w, h, vigArr);
-      try {
-        var track = stream.getVideoTracks()[0];
-        if (track && track.requestFrame) track.requestFrame();
-      } catch (e) {}
-    }
-
-    function tick() {
-      if (exportState !== "exporting") return;
-
-      paintFrame();
-
-      var cur = video.currentTime || 0;
-      var pct = duration > 0
-        ? Math.min(99, Math.round((cur / duration) * 100))
-        : 0;
-      setStatus("Processing video\u2026 " + pct + "%");
-
-      /* Some iOS versions can fail to deliver "ended". */
-      if ((duration > 0 && cur >= duration - 0.08) ||
-          Date.now() - startedAt > Math.max(15000, (duration + 5) * 1000)) {
-        finish();
-        return;
-      }
-      raf = requestAnimationFrame(tick);
-    }
-
-    video.addEventListener("ended", finish);
-    paintFrame();
-
-    try {
-      rec.start(250);
-    } catch (e) {
-      exportState = "idle";
-      saveBtn.disabled = false;
-      setStatus("Could not start recording");
-      return;
-    }
-
-    video.currentTime = 0;
-
-    /* Do not require audio capture on iOS. The old implementation depended
-       on video.captureStream() audio tracks, which is a common iOS failure
-       point. The filtered video remains exportable even without audio. */
-    try { video.muted = true; } catch (e) {}
-    updateMute();
-
-    var playPromise = null;
-    try { playPromise = video.play(); } catch (e) {}
-
-    if (playPromise && playPromise.catch) {
-      playPromise.catch(function () {
-        finish();
-        exportState = "idle";
-        saveBtn.disabled = false;
-        setStatus("Tap Play first, then try Save again");
-      });
-    }
-
-    raf = requestAnimationFrame(tick);
   }
 
-  saveBtn.addEventListener("click", function () {
-    if (exportState === "ready" && exportBlob) {
-      shareOrDownload(exportBlob, exportName);
-      setStatus("Saved \u2014 check your downloads/files");
-    } else if (exportState === "idle") {
-      doExport();
-    }
-  });
 
-  fit();
-  requestAnimationFrame(loop);
+  const r=
+    await videoBlob(
+      it,
+      progress
+    );
+
+
+  return {
+
+    blob:r.blob,
+
+    name:
+      baseName(
+        it.file.name
+      )+
+      "-noir."+
+      extForMime(
+        r.mime
+      ),
+
+    mime:r.mime,
+
+    audio:r.audio
+
+  };
+
+}
+
+
+/* =========================================================
+   EXPORT ONE
+   ========================================================= */
+
+async function exportOne(i){
+
+  const it=
+    items[i];
+
+  if(
+    !it ||
+    it.busy
+  ){
+
+    return;
+
+  }
+
+
+  it.busy=true;
+
+  renderGallery();
+
+
+  try{
+
+    setProgress(
+      0,
+      1,
+      "Processing "+
+      it.file.name+
+      "…"
+    );
+
+
+    const r=
+      await processItem(
+        it,
+        function(p){
+
+          setProgress(
+            p,
+            1,
+            "Processing "+
+            it.file.name+
+            "…"
+          );
+
+        }
+      );
+
+
+    it.result=r;
+
+    it.error=null;
+
+
+    setProgress(
+      1,
+      1,
+      "Ready: "+
+      it.file.name
+    );
+
+
+    renderGallery();
+
+
+    await saveBlob(
+      r.blob,
+      r.name
+    );
+
+  }catch(e){
+
+    it.error=
+      e.message ||
+      "Export failed.";
+
+    setProgress(
+      1,
+      1,
+      "Failed: "+
+      it.file.name+
+      " — "+
+      it.error
+    );
+
+    renderGallery();
+
+  }finally{
+
+    it.busy=false;
+
+    updateInfo();
+
+  }
+
+}
+
+
+/* =========================================================
+   SAVE FILE
+   ========================================================= */
+
+async function saveBlob(
+  blob,
+  name
+){
+
+  const file=
+    new File(
+      [blob],
+      name,
+      {
+        type:
+          blob.type ||
+          "application/octet-stream"
+      }
+    );
+
+
+  /*
+   iPhone/iPad:
+   use native Share Sheet when available.
+  */
+
+  if(
+    isIOS() &&
+    navigator.share &&
+    navigator.canShare &&
+    navigator.canShare({
+      files:[file]
+    })
+  ){
+
+    try{
+
+      await navigator.share({
+        files:[file],
+        title:
+          "NOIR — "+
+          name
+      });
+
+      return;
+
+    }catch(e){}
+
+  }
+
+
+  const url=
+    URL.createObjectURL(
+      blob
+    );
+
+  const a=
+    document.createElement(
+      "a"
+    );
+
+  a.href=url;
+
+  a.download=name;
+
+  a.rel="noopener";
+
+  document.body.appendChild(a);
+
+  a.click();
+
+
+  setTimeout(
+    function(){
+
+      a.remove();
+
+      URL.revokeObjectURL(
+        url
+      );
+
+    },
+    1500
+  );
+
+}
+
+
+/* =========================================================
+   ZIP WRITER
+   ========================================================= */
+
+function u16(a,n){
+
+  a.push(
+    n&255,
+    (n>>>8)&255
+  );
+
+}
+
+
+function u32(a,n){
+
+  a.push(
+    n&255,
+    (n>>>8)&255,
+    (n>>>16)&255,
+    (n>>>24)&255
+  );
+
+}
+
+
+function crc32(buf){
+
+  let table=
+    crc32.t;
+
+
+  if(!table){
+
+    table=[];
+
+
+    for(
+      let n=0;
+      n<256;
+      n++
+    ){
+
+      let c=n;
+
+
+      for(
+        let k=0;
+        k<8;
+        k++
+      ){
+
+        c=
+          c&1
+            ? 0xedb88320^(c>>>1)
+            : c>>>1;
+
+      }
+
+      table[n]=
+        c>>>0;
+
+    }
+
+
+    crc32.t=table;
+
+  }
+
+
+  let c=
+    0xffffffff;
+
+
+  for(
+    let i=0;
+    i<buf.length;
+    i++
+  ){
+
+    c=
+      table[
+        (c^buf[i])&255
+      ] ^
+      (c>>>8);
+
+  }
+
+
+  return(
+    c^0xffffffff
+  )>>>0;
+
+}
+
+
+/* =========================================================
+   ASYNC ZIP
+   ========================================================= */
+
+async function makeZipAsync(
+  files
+){
+
+  const enc=
+    new TextEncoder();
+
+  const locals=[];
+
+  const centrals=[];
+
+  let offset=0;
+
+
+  for(
+    const f of files
+  ){
+
+    const data=
+      new Uint8Array(
+        await f.blob.arrayBuffer()
+      );
+
+    const name=
+      enc.encode(
+        f.name
+      );
+
+    const crc=
+      crc32(data);
+
+    const lh=[];
+
+
+    u32(
+      lh,
+      0x04034b50
+    );
+
+    u16(lh,20);
+
+    u16(lh,0);
+
+    u16(lh,0);
+
+    u16(lh,0);
+
+    u16(lh,0);
+
+    u32(lh,crc);
+
+    u32(lh,data.length);
+
+    u32(lh,data.length);
+
+    u16(
+      lh,
+      name.length
+    );
+
+    u16(lh,0);
+
+
+    const localBlob=
+      new Blob([
+        new Uint8Array(lh),
+        name,
+        data
+      ]);
+
+
+    locals.push(
+      localBlob
+    );
+
+
+    const ch=[];
+
+
+    u32(
+      ch,
+      0x02014b50
+    );
+
+    u16(ch,20);
+
+    u16(ch,20);
+
+    u16(ch,0);
+
+    u16(ch,0);
+
+    u16(ch,0);
+
+    u16(ch,0);
+
+    u32(ch,crc);
+
+    u32(ch,data.length);
+
+    u32(ch,data.length);
+
+    u16(
+      ch,
+      name.length
+    );
+
+    u16(ch,0);
+
+    u16(ch,0);
+
+    u16(ch,0);
+
+    u16(ch,0);
+
+    u32(ch,0);
+
+    u32(ch,offset);
+
+
+    centrals.push(
+      new Blob([
+        new Uint8Array(ch),
+        name
+      ])
+    );
+
+
+    offset+=
+      lh.length+
+      name.length+
+      data.length;
+
+  }
+
+
+  const centralSize=
+    centrals.reduce(
+      function(n,b){
+
+        return n+b.size;
+
+      },
+      0
+    );
+
+
+  const end=[];
+
+
+  u32(
+    end,
+    0x06054b50
+  );
+
+  u16(end,0);
+
+  u16(end,0);
+
+  u16(
+    end,
+    files.length
+  );
+
+  u16(
+    end,
+    files.length
+  );
+
+  u32(
+    end,
+    centralSize
+  );
+
+  u32(
+    end,
+    offset
+  );
+
+  u16(end,0);
+
+
+  return new Blob(
+    [
+      ...locals,
+      ...centrals,
+      new Uint8Array(end)
+    ],
+    {
+      type:"application/zip"
+    }
+  );
+
+}
+
+
+/* =========================================================
+   SAVE ALL
+   ========================================================= */
+
+saveAll.addEventListener(
+  "click",
+  async function(){
+
+    if(!items.length)
+      return;
+
+
+    saveAll.disabled=true;
+
+    clearBtn.disabled=true;
+
+
+    let ok=0;
+
+    let fail=0;
+
+    const results=[];
+
+
+    for(
+      let i=0;
+      i<items.length;
+      i++
+    ){
+
+      const it=
+        items[i];
+
+      it.busy=true;
+
+      renderGallery();
+
+
+      setProgress(
+        i,
+        items.length,
+        "Processing "+
+        (i+1)+
+        " of "+
+        items.length+
+        ": "+
+        it.file.name
+      );
+
+
+      try{
+
+        const r=
+          await processItem(
+            it,
+            function(p){
+
+              setProgress(
+                i+p/100,
+                items.length,
+                "Processing "+
+                (i+1)+
+                " of "+
+                items.length+
+                ": "+
+                it.file.name
+              );
+
+            }
+          );
+
+
+        it.result=r;
+
+        it.error=null;
+
+        results.push(r);
+
+        ok++;
+
+      }catch(e){
+
+        it.error=
+          e.message ||
+          "Export failed.";
+
+        fail++;
+
+      }finally{
+
+        it.busy=false;
+
+        renderGallery();
+
+      }
+
+    }
+
+
+    try{
+
+      if(results.length===1){
+
+        await saveBlob(
+          results[0].blob,
+          results[0].name
+        );
+
+      }else if(results.length>1){
+
+        const zip=
+          await makeZipAsync(
+            results
+          );
+
+        await saveBlob(
+          zip,
+          "noir-export-"+
+          new Date()
+            .toISOString()
+            .slice(0,10)+
+          ".zip"
+        );
+
+      }
+
+    }catch(e){
+
+      setProgress(
+        items.length,
+        items.length,
+        "Processing finished, but the browser blocked the final download. Use each item's Save button."
+      );
+
+    }
+
+
+    setProgress(
+      items.length,
+      items.length,
+      ok+
+      " exported"+
+      (
+        fail
+          ? " · "+
+            fail+
+            " failed"
+          : ""
+      )+
+      " — "+
+      (
+        results.length>1
+          ? "ZIP download started"
+          : "download started"
+      )
+    );
+
+
+    saveAll.disabled=false;
+
+    clearBtn.disabled=false;
+
+    updateInfo();
+
+  }
+);
+
+
+/* =========================================================
+   RESIZE
+   ========================================================= */
+
+window.addEventListener(
+  "resize",
+  function(){
+
+    if(
+      selected>=0 &&
+      items[selected] &&
+      items[selected].kind==="video" &&
+      video.videoWidth
+    ){
+
+      fitCanvas(
+        video.videoWidth,
+        video.videoHeight
+      );
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   INITIAL STATE
+   ========================================================= */
+
+clearBtn.disabled=true;
+
+updateInfo();
+
+empty.style.display="flex";
+
+ctx.fillStyle="#000";
+
+ctx.fillRect(
+  0,
+  0,
+  canvas.width,
+  canvas.height
+);
+
+
+if(
+  isIOS() &&
+  location.protocol==="file:"
+){
+
+  const iosHint=
+    document.getElementById(
+      "iosHint"
+    );
+
+  if(iosHint){
+
+    iosHint.style.display=
+      "block";
+
+  }
+
+}
+
 })();
 </script>
 
