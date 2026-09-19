@@ -2,39 +2,54 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"
+>
+
 <meta name="theme-color" content="#000">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
 <title>NOIR — Dark Cinematic Filter</title>
 
 <style>
 :root{
   color-scheme:dark;
   --line:rgba(255,255,255,.18);
-  --muted:rgba(255,255,255,.56)
+  --muted:rgba(255,255,255,.56);
 }
 
 *{
-  box-sizing:border-box
+  box-sizing:border-box;
 }
 
-html,body{
+html,
+body{
   margin:0;
   background:#000;
   color:#f4f4f4;
   min-height:100%;
-  font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
-  -webkit-font-smoothing:antialiased
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+  -webkit-font-smoothing:antialiased;
 }
 
 body{
   min-height:100dvh;
-  padding-bottom:env(safe-area-inset-bottom)
+  padding-bottom:env(safe-area-inset-bottom);
 }
 
-button,label{
-  font:inherit
+button,
+label{
+  font:inherit;
 }
 
 button{
@@ -42,17 +57,17 @@ button{
   background:transparent;
   border:1px solid var(--line);
   cursor:pointer;
-  -webkit-tap-highlight-color:transparent
+  -webkit-tap-highlight-color:transparent;
 }
 
 button:disabled{
   opacity:.35;
-  cursor:default
+  cursor:default;
 }
 
 header{
   text-align:center;
-  padding:20px 16px 10px
+  padding:20px 16px 10px;
 }
 
 h1{
@@ -60,7 +75,7 @@ h1{
   font-size:13px;
   font-weight:400;
   letter-spacing:.55em;
-  text-indent:.55em
+  text-indent:.55em;
 }
 
 .sub{
@@ -68,13 +83,13 @@ h1{
   font-size:10px;
   letter-spacing:.28em;
   text-transform:uppercase;
-  opacity:.5
+  opacity:.5;
 }
 
 main{
   width:min(1100px,100%);
   margin:auto;
-  padding:0 12px 20px
+  padding:0 12px 20px;
 }
 
 #stage{
@@ -86,14 +101,14 @@ main{
   justify-content:center;
   overflow:hidden;
   background:#050505;
-  border:1px solid rgba(255,255,255,.06)
+  border:1px solid rgba(255,255,255,.06);
 }
 
 #out{
   display:block;
   background:#000;
   max-width:100%;
-  max-height:100%
+  max-height:100%;
 }
 
 #empty{
@@ -104,7 +119,7 @@ main{
   text-transform:uppercase;
   opacity:.35;
   padding:24px;
-  pointer-events:none
+  pointer-events:none;
 }
 
 #statusOverlay{
@@ -118,11 +133,11 @@ main{
   background:rgba(0,0,0,.62);
   backdrop-filter:blur(4px);
   z-index:8;
-  text-align:center
+  text-align:center;
 }
 
 #statusOverlay.show{
-  display:flex
+  display:flex;
 }
 
 .statusSpinner{
@@ -131,7 +146,7 @@ main{
   border:2px solid rgba(255,255,255,.2);
   border-top-color:#fff;
   border-radius:50%;
-  animation:spin .8s linear infinite
+  animation:spin .8s linear infinite;
 }
 
 #statusText{
@@ -140,11 +155,13 @@ main{
   text-transform:uppercase;
   opacity:.8;
   max-width:80%;
-  line-height:1.5
+  line-height:1.5;
 }
 
 @keyframes spin{
-  to{transform:rotate(360deg)}
+  to{
+    transform:rotate(360deg);
+  }
 }
 
 #play{
@@ -159,16 +176,16 @@ main{
   display:none;
   align-items:center;
   justify-content:center;
-  z-index:3
+  z-index:3;
 }
 
 #play.show{
-  display:flex
+  display:flex;
 }
 
 #play svg{
   width:24px;
-  fill:#fff
+  fill:#fff;
 }
 
 #mute{
@@ -182,16 +199,16 @@ main{
   align-items:center;
   justify-content:center;
   background:rgba(0,0,0,.45);
-  z-index:4
+  z-index:4;
 }
 
 #mute.show{
-  display:flex
+  display:flex;
 }
 
 #mute svg{
   width:18px;
-  fill:#fff
+  fill:#fff;
 }
 
 .toolbar{
@@ -199,26 +216,27 @@ main{
   gap:8px;
   flex-wrap:wrap;
   justify-content:center;
-  padding:12px 0 8px
+  padding:12px 0 8px;
 }
 
-#pick,.action{
+#pick,
+.action{
   min-height:44px;
   padding:12px 17px;
   text-transform:uppercase;
   font-size:10px;
-  letter-spacing:.18em
+  letter-spacing:.18em;
 }
 
 .primary{
   background:#fff;
   color:#000;
-  border-color:#fff
+  border-color:#fff;
 }
 
 .danger{
   border-color:rgba(255,80,80,.4);
-  color:#ffb0b0
+  color:#ffb0b0;
 }
 
 #file{
@@ -226,7 +244,7 @@ main{
   width:1px;
   height:1px;
   opacity:0;
-  pointer-events:none
+  pointer-events:none;
 }
 
 .info{
@@ -235,26 +253,26 @@ main{
   font-size:10px;
   letter-spacing:.12em;
   text-transform:uppercase;
-  color:var(--muted)
+  color:var(--muted);
 }
 
 #progressWrap{
   display:none;
   margin:10px auto;
-  max-width:720px
+  max-width:720px;
 }
 
 .progressTrack{
   height:3px;
   background:#171717;
-  overflow:hidden
+  overflow:hidden;
 }
 
 .progressBar{
   height:100%;
   width:0;
   background:#fff;
-  transition:width .15s
+  transition:width .15s;
 }
 
 .progressText{
@@ -262,14 +280,14 @@ main{
   margin-top:7px;
   font-size:10px;
   letter-spacing:.1em;
-  color:var(--muted)
+  color:var(--muted);
 }
 
 #gallery{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
   gap:8px;
-  margin-top:10px
+  margin-top:10px;
 }
 
 .card{
@@ -277,7 +295,7 @@ main{
   min-width:0;
   border:1px solid rgba(255,255,255,.1);
   background:#070707;
-  overflow:hidden
+  overflow:hidden;
 }
 
 .thumb{
@@ -285,38 +303,38 @@ main{
   display:block;
   width:100%;
   object-fit:cover;
-  background:#111
+  background:#111;
 }
 
 .cardBody{
-  padding:7px
+  padding:7px;
 }
 
 .name{
   font-size:10px;
   white-space:nowrap;
   overflow:hidden;
-  text-overflow:ellipsis
+  text-overflow:ellipsis;
 }
 
 .type{
   font-size:9px;
   opacity:.42;
   margin-top:3px;
-  text-transform:uppercase
+  text-transform:uppercase;
 }
 
 .cardBtns{
   display:flex;
   gap:5px;
-  margin-top:7px
+  margin-top:7px;
 }
 
 .cardBtns button{
   flex:1;
   padding:7px 4px;
   font-size:8px;
-  letter-spacing:.08em
+  letter-spacing:.08em;
 }
 
 .remove{
@@ -327,20 +345,16 @@ main{
   width:25px;
   height:25px;
   background:rgba(0,0,0,.7);
-  font-size:14px
-}
-
-.result{
-  color:#ddd
+  font-size:14px;
 }
 
 .failed{
-  color:#ff9b9b
+  color:#ff9b9b;
 }
 
 footer{
   text-align:center;
-  padding:6px 16px 22px
+  padding:6px 16px 22px;
 }
 
 .hint{
@@ -349,47 +363,48 @@ footer{
   letter-spacing:.08em;
   opacity:.38;
   max-width:720px;
-  margin:10px auto
+  margin:10px auto;
 }
 
 @media(max-width:560px){
+
   header{
-    padding-top:16px
+    padding-top:16px;
   }
 
   .toolbar{
     display:grid;
-    grid-template-columns:1fr 1fr
+    grid-template-columns:1fr 1fr;
   }
 
   .toolbar>*{
     width:100%;
-    text-align:center
+    text-align:center;
   }
 
   .toolbar #saveAll{
-    grid-column:1/-1
+    grid-column:1/-1;
   }
 
   .toolbar #clear{
-    grid-column:1/-1
+    grid-column:1/-1;
   }
 
   #stage{
     height:48vh;
-    min-height:250px
+    min-height:250px;
   }
 
   #gallery{
-    grid-template-columns:repeat(3,1fr)
+    grid-template-columns:repeat(3,1fr);
   }
 
   .cardBody{
-    padding:6px
+    padding:6px;
   }
 
   .cardBtns button{
-    font-size:7px
+    font-size:7px;
   }
 }
 </style>
@@ -418,9 +433,11 @@ footer{
   </div>
 
   <button id="play" aria-label="Play or pause">
+
     <svg viewBox="0 0 24 24">
       <path d="M8 5v14l11-7z"/>
     </svg>
+
   </button>
 
   <button id="mute" aria-label="Mute or unmute">
@@ -430,7 +447,7 @@ footer{
     </svg>
 
     <svg id="icoVolOff" viewBox="0 0 24 24">
-      <path d="M3 9v6h4l5 5V4L7 9H3zm14.6 3 2.7-2.7-1.4-1.4-2.7 2.7-2.7-2.7-1.4 1.4 2.7 2.7-2.7 2.7 1.4 1.4 2.7-2.7 2.7 2.7 1.4-1.4-2.7-2.7z"/>
+      <path d="M3 9v6h4l5 5V4L7 9H3zm14.6 3 2.7-2.7-1.4-1.4-2.7 2.7-2.7-2.7-1.4 1.4 2.7 2.7-2.7 2.7 1.4 1.4 2.7-2.7 2.7 2.7 1.4-1.4-2.7-2.7-2.7 2.7-2.7-2.7 1.4-1.4 2.7 2.7z"/>
     </svg>
 
   </button>
@@ -462,7 +479,7 @@ footer{
 </div>
 
 <div id="info" class="info">
-  0 / 30 files selected
+  0 / 100 files selected
 </div>
 
 <div
@@ -470,8 +487,7 @@ footer{
   class="info"
   style="display:none;margin-top:6px;color:rgba(255,255,255,.7)"
 >
-  iPhone tip: if the Photos picker closes without adding the item,
-  open index.html in Safari (not the Files document preview).
+  iPhone tip: open this page in Safari rather than the Files HTML preview.
 </div>
 
 <div id="progressWrap">
@@ -489,11 +505,10 @@ footer{
 <footer>
 
 <p class="hint">
-NOIR preserves the original dark grade, muted cool tone, vignette and film grain.
-Video exports are rendered at about 1.5× speed with deliberately reduced frame
-smoothness. On iPhone, Safari may export video without audio because its local
-MediaRecorder APIs do not reliably expose source audio; the app reports that
-limitation instead of leaving processing stuck.
+NOIR preserves the dark cinematic grade, muted cool tone, contrast,
+vignette and film grain. Videos are processed frame-by-frame instead
+of loading the entire video into memory. Video playback/export remains
+approximately 1.5× speed with deliberately reduced frame smoothness.
 </p>
 
 </footer>
@@ -505,6 +520,7 @@ limitation instead of leaving processing stuck.
   playsinline
   preload="metadata"
   muted
+  style="display:none"
 ></video>
 
 
@@ -518,95 +534,160 @@ limitation instead of leaving processing stuck.
    GLOBAL ERROR REPORTING
    ========================================================= */
 
-window.addEventListener("error",function(e){
+window.addEventListener(
+  "error",
+  function(e){
 
-  const el=document.getElementById("info");
+    const el=
+      document.getElementById("info");
 
-  if(el){
-    el.textContent=
-      "NOIR error: "+
-      (e.message||"Unexpected error");
-  }
+    if(el){
 
-});
+      el.textContent=
+        "NOIR error: "+
+        (e.message||"Unexpected error");
 
-window.addEventListener("unhandledrejection",function(e){
-
-  const el=document.getElementById("info");
-
-  if(el){
-
-    el.textContent=
-      "NOIR error: "+
-      (
-        e.reason &&
-        e.reason.message
-      ) ||
-      e.reason ||
-      "Unexpected error";
+    }
 
   }
+);
 
-});
+
+window.addEventListener(
+  "unhandledrejection",
+  function(e){
+
+    const el=
+      document.getElementById("info");
+
+    if(el){
+
+      el.textContent=
+        "NOIR error: "+
+        (
+          e.reason &&
+          e.reason.message
+        ) ||
+        e.reason ||
+        "Unexpected error";
+
+    }
+
+  }
+);
 
 
 /* =========================================================
    SETTINGS
    ========================================================= */
 
-const MAX=30;
+/*
+  Increased from 30 to 100.
+
+  IMPORTANT:
+  This is a file-count limit, not a memory limit.
+  The application now avoids keeping processed videos
+  in memory unnecessarily.
+*/
+
+const MAX=100;
+
+
+/*
+  Original requested playback speed.
+*/
+
 const SPEED=1.5;
-const EXPORT_FPS=12;
-const PREVIEW_FPS=12;
+
+
+/*
+  Lower export frame rate reduces CPU/RAM pressure
+  while preserving the intentionally choppy look.
+*/
+
+const EXPORT_FPS=10;
+
+const PREVIEW_FPS=10;
+
+
+/*
+  Video working resolution.
+
+  Smaller working dimensions are especially important
+  on iPhones with limited RAM.
+*/
+
+const MOBILE_VIDEO_MAX=720;
+
+const DESKTOP_VIDEO_MAX=1080;
 
 
 /* =========================================================
    ELEMENTS
    ========================================================= */
 
-const video=document.getElementById("video");
+const video=
+  document.getElementById("video");
 
-const canvas=document.getElementById("out");
+const canvas=
+  document.getElementById("out");
 
-const ctx=canvas.getContext(
-  "2d",
-  {
-    willReadFrequently:true,
-    alpha:false
-  }
-);
+const ctx=
+  canvas.getContext(
+    "2d",
+    {
+      willReadFrequently:true,
+      alpha:false
+    }
+  );
 
-const stage=document.getElementById("stage");
+const stage=
+  document.getElementById("stage");
 
-const empty=document.getElementById("empty");
+const empty=
+  document.getElementById("empty");
 
-const playBtn=document.getElementById("play");
+const playBtn=
+  document.getElementById("play");
 
-const muteBtn=document.getElementById("mute");
+const muteBtn=
+  document.getElementById("mute");
 
-const fileIn=document.getElementById("file");
+const fileIn=
+  document.getElementById("file");
 
-const saveAll=document.getElementById("saveAll");
+const saveAll=
+  document.getElementById("saveAll");
 
-const clearBtn=document.getElementById("clear");
+const clearBtn=
+  document.getElementById("clear");
 
-const gallery=document.getElementById("gallery");
+const gallery=
+  document.getElementById("gallery");
 
-const info=document.getElementById("info");
+const info=
+  document.getElementById("info");
 
-const progressWrap=document.getElementById("progressWrap");
+const progressWrap=
+  document.getElementById("progressWrap");
 
-const progressBar=document.getElementById("progressBar");
+const progressBar=
+  document.getElementById("progressBar");
 
-const progressText=document.getElementById("progressText");
+const progressText=
+  document.getElementById("progressText");
 
-const statusOverlay=document.getElementById("statusOverlay");
+const statusOverlay=
+  document.getElementById("statusOverlay");
 
-const statusText=document.getElementById("statusText");
+const statusText=
+  document.getElementById("statusText");
 
-const icoOn=document.getElementById("icoVolOn");
+const icoOn=
+  document.getElementById("icoVolOn");
 
-const icoOff=document.getElementById("icoVolOff");
+const icoOff=
+  document.getElementById("icoVolOff");
 
 
 /* =========================================================
@@ -617,22 +698,38 @@ let items=[];
 
 let selected=-1;
 
-let raf=0;
-
 let lastPreviewTime=-1;
 
-let previewBusy=false;
+
+/*
+  We keep only the original File object and one object URL
+  per item.
+
+  We DO NOT keep processed video blobs for every item.
+  This is the main memory improvement.
+*/
+
+let currentPreviewURL=null;
 
 
 /* =========================================================
    FILM GRAIN
    ========================================================= */
 
-let grain=new Float32Array(256*256);
+let grain=
+  new Float32Array(
+    256*256
+  );
 
-for(let i=0;i<grain.length;i++){
 
-  grain[i]=(Math.random()*2-1)*9;
+for(
+  let i=0;
+  i<grain.length;
+  i++
+){
+
+  grain[i]=
+    (Math.random()*2-1)*9;
 
 }
 
@@ -643,13 +740,17 @@ for(let i=0;i<grain.length;i++){
 
 const K=.55;
 
-const curve=new Uint8ClampedArray(256);
+const curve=
+  new Uint8ClampedArray(256);
 
-const lutR=new Uint8ClampedArray(256);
+const lutR=
+  new Uint8ClampedArray(256);
 
-const lutG=new Uint8ClampedArray(256);
+const lutG=
+  new Uint8ClampedArray(256);
 
-const lutB=new Uint8ClampedArray(256);
+const lutB=
+  new Uint8ClampedArray(256);
 
 
 function clamp(v){
@@ -663,7 +764,11 @@ function clamp(v){
 }
 
 
-for(let i=0;i<256;i++){
+for(
+  let i=0;
+  i<256;
+  i++
+){
 
   let t=i/255;
 
@@ -677,16 +782,24 @@ for(let i=0;i<256;i++){
 }
 
 
-for(let i=0;i<256;i++){
+for(
+  let i=0;
+  i<256;
+  i++
+){
 
   lutR[i]=
-    curve[clamp(i-2)];
+    curve[
+      clamp(i-2)
+    ];
 
   lutG[i]=
     curve[i];
 
   lutB[i]=
-    curve[clamp(i+4)];
+    curve[
+      clamp(i+4)
+    ];
 
 }
 
@@ -708,11 +821,23 @@ function buildVig(w,h){
   const cy=h/2;
 
   const maxD=
-    Math.sqrt(cx*cx+cy*cy)||1;
+    Math.sqrt(
+      cx*cx+
+      cy*cy
+    )||1;
 
-  for(let y=0;y<h;y++){
 
-    for(let x=0;x<w;x++){
+  for(
+    let y=0;
+    y<h;
+    y++
+  ){
+
+    for(
+      let x=0;
+      x<w;
+      x++
+    ){
 
       let dx=
         (x+.5-cx)/maxD;
@@ -721,7 +846,10 @@ function buildVig(w,h){
         (y+.5-cy)/maxD;
 
       let d=
-        Math.sqrt(dx*dx+dy*dy);
+        Math.sqrt(
+          dx*dx+
+          dy*dy
+        );
 
       let t=
         (d-.55)/.47;
@@ -731,7 +859,9 @@ function buildVig(w,h){
       t=
         t*t*(3-2*t);
 
-      a[y*w+x]=
+      a[
+        y*w+x
+      ]=
         1-t*.36;
 
     }
@@ -745,11 +875,14 @@ function buildVig(w,h){
 
 function getVig(w,h){
 
-  const key=w+"x"+h;
+  const key=
+    w+"x"+h;
 
   if(!vigCache[key]){
+
     vigCache[key]=
       buildVig(w,h);
+
   }
 
   return vigCache[key];
@@ -761,7 +894,13 @@ function getVig(w,h){
    APPLY NOIR FILTER
    ========================================================= */
 
-function paint(c,w,h,vig,source){
+function paint(
+  c,
+  w,
+  h,
+  vig,
+  source
+){
 
   c.drawImage(
     source,
@@ -770,6 +909,7 @@ function paint(c,w,h,vig,source){
     w,
     h
   );
+
 
   const img=
     c.getImageData(
@@ -789,18 +929,31 @@ function paint(c,w,h,vig,source){
 
   const KS=.6;
 
-  for(let y=0;y<h;y++){
 
-    let row=y*w;
+  for(
+    let y=0;
+    y<h;
+    y++
+  ){
+
+    let row=
+      y*w;
 
     let gRow=
       ((y+oy)&255)<<8;
 
-    for(let x=0;x<w;x++){
 
-      let pi=row+x;
+    for(
+      let x=0;
+      x<w;
+      x++
+    ){
 
-      let o=pi*4;
+      let pi=
+        row+x;
+
+      let o=
+        pi*4;
 
       let r=d[o];
 
@@ -808,28 +961,36 @@ function paint(c,w,h,vig,source){
 
       let b=d[o+2];
 
+
       let L=
         r*.2126+
         g*.7152+
         b*.0722;
 
+
       r=
-        L+(r-L)*KS;
+        L+
+        (r-L)*KS;
 
       g=
-        L+(g-L)*KS;
+        L+
+        (g-L)*KS;
 
       b=
-        L+(b-L)*KS;
+        L+
+        (b-L)*KS;
+
 
       let v=
         vig[pi];
+
 
       let n=
         grain[
           gRow|
           ((x+ox)&255)
         ];
+
 
       d[o]=
         clamp(
@@ -850,7 +1011,12 @@ function paint(c,w,h,vig,source){
 
   }
 
-  c.putImageData(img,0,0);
+
+  c.putImageData(
+    img,
+    0,
+    0
+  );
 
 }
 
@@ -858,13 +1024,6 @@ function paint(c,w,h,vig,source){
 /* =========================================================
    HELPERS
    ========================================================= */
-
-function isVideo(it){
-
-  return it.kind==="video";
-
-}
-
 
 function isIOS(){
 
@@ -939,10 +1098,19 @@ function fileDataURL(file){
 function baseName(name){
 
   return name
-    .replace(/\.[^/.]+$/,"")
-    .replace(/[^\w\- ]+/g,"")
+    .replace(
+      /\.[^/.]+$/,
+      ""
+    )
+    .replace(
+      /[^\w\- ]+/g,
+      ""
+    )
     .trim()
-    .slice(0,80) ||
+    .slice(
+      0,
+      80
+    ) ||
     "noir";
 
 }
@@ -950,11 +1118,13 @@ function baseName(name){
 
 function extForMime(mime){
 
-  if(mime.includes("webm"))
-    return "webm";
+  if(
+    mime.includes("mp4")
+  ){
 
-  if(mime.includes("mp4"))
     return "mp4";
+
+  }
 
   return "webm";
 
@@ -974,7 +1144,10 @@ function pickVideoMime(){
     "video/mp4"
   ];
 
-  for(const type of types){
+
+  for(
+    const type of types
+  ){
 
     if(
       window.MediaRecorder &&
@@ -988,6 +1161,7 @@ function pickVideoMime(){
 
   }
 
+
   return "";
 
 }
@@ -997,13 +1171,24 @@ function pickVideoMime(){
    CANVAS FIT
    ========================================================= */
 
-function fitCanvas(w,h){
+function fitCanvas(
+  w,
+  h,
+  maxDimension
+){
 
-  if(!w||!h)return;
+  if(!w||!h)
+    return;
 
-  const maxW=1600;
 
-  const maxH=1600;
+  const maxW=
+    maxDimension ||
+    DESKTOP_VIDEO_MAX;
+
+  const maxH=
+    maxDimension ||
+    DESKTOP_VIDEO_MAX;
+
 
   const scale=
     Math.min(
@@ -1012,11 +1197,13 @@ function fitCanvas(w,h){
       maxH/h
     );
 
+
   canvas.width=
     Math.max(
       1,
       Math.round(w*scale)
     );
+
 
   canvas.height=
     Math.max(
@@ -1040,6 +1227,7 @@ function setProgress(
   progressWrap.style.display=
     "block";
 
+
   const percent=
     total
       ? Math.max(
@@ -1051,8 +1239,10 @@ function setProgress(
         )
       : 0;
 
+
   progressBar.style.width=
     percent+"%";
+
 
   progressText.textContent=
     message||"";
@@ -1072,8 +1262,10 @@ function updateInfo(){
     MAX+
     " files selected";
 
+
   saveAll.disabled=
     items.length===0;
+
 
   clearBtn.disabled=
     items.length===0;
@@ -1093,14 +1285,16 @@ function detectKind(file){
   const name=
     (file.name||"").toLowerCase();
 
+
   if(
     type.startsWith("video/") ||
-    /\.(mp4|mov|m4v|webm|ogv|avi)$/i.test(name)
+    /\.(mp4|mov|m4v|webm|ogv)$/i.test(name)
   ){
 
     return "video";
 
   }
+
 
   if(
     type.startsWith("image/") ||
@@ -1110,6 +1304,7 @@ function detectKind(file){
     return "image";
 
   }
+
 
   return "";
 
@@ -1122,18 +1317,21 @@ function detectKind(file){
 
 fileIn.addEventListener(
   "change",
-  async function(){
+  function(){
 
     const selectedFiles=
       Array.from(
         fileIn.files||[]
       );
 
+
     if(!selectedFiles.length)
       return;
 
+
     const remaining=
       MAX-items.length;
+
 
     if(remaining<=0){
 
@@ -1148,25 +1346,38 @@ fileIn.addEventListener(
 
     }
 
+
     const files=
       selectedFiles.slice(
         0,
         remaining
       );
 
-    for(const file of files){
+
+    for(
+      const file of files
+    ){
 
       const kind=
         detectKind(file);
 
-      if(!kind){
 
+      if(!kind)
         continue;
 
-      }
+
+      /*
+       One object URL per original file.
+
+       We do NOT create thumbnails by loading
+       every video into memory.
+      */
 
       const url=
-        URL.createObjectURL(file);
+        URL.createObjectURL(
+          file
+        );
+
 
       items.push({
 
@@ -1176,31 +1387,29 @@ fileIn.addEventListener(
 
         url:url,
 
-        dataURL:null,
-
-        result:null,
-
         error:null,
 
-        busy:false
+        busy:false,
+
+        result:null
 
       });
 
     }
 
+
     fileIn.value="";
+
 
     renderGallery();
 
     updateInfo();
 
+
     if(items.length){
 
       selectItem(
-        Math.max(
-          0,
-          items.length-1
-        )
+        items.length-1
       );
 
     }
@@ -1217,6 +1426,7 @@ function renderGallery(){
 
   gallery.innerHTML="";
 
+
   items.forEach(
     function(it,index){
 
@@ -1228,29 +1438,73 @@ function renderGallery(){
       card.className=
         "card";
 
-      const thumb=
-        document.createElement(
-          it.kind==="video"
-            ? "video"
-            : "img"
-        );
 
-      thumb.className=
-        "thumb";
+      /*
+       IMPORTANT MEMORY FIX:
 
-      thumb.src=
-        it.url;
+       Images use normal img elements.
 
-      if(it.kind==="video"){
+       Videos use a video thumbnail with
+       preload="none", meaning the browser does
+       NOT download/decode all videos just because
+       they are in the gallery.
+      */
+
+      let thumb;
+
+
+      if(
+        it.kind==="video"
+      ){
+
+        thumb=
+          document.createElement(
+            "video"
+          );
+
+        thumb.preload="none";
 
         thumb.muted=true;
 
         thumb.playsInline=true;
 
-        thumb.preload=
-          "metadata";
+        thumb.controls=false;
+
+        thumb.setAttribute(
+          "aria-label",
+          "Video preview"
+        );
+
+      }else{
+
+        thumb=
+          document.createElement(
+            "img"
+          );
 
       }
+
+
+      thumb.className=
+        "thumb";
+
+
+      thumb.src=
+        it.url;
+
+
+      if(
+        it.kind==="image"
+      ){
+
+        thumb.loading=
+          "lazy";
+
+        thumb.decoding=
+          "async";
+
+      }
+
 
       const body=
         document.createElement(
@@ -1259,6 +1513,7 @@ function renderGallery(){
 
       body.className=
         "cardBody";
+
 
       const name=
         document.createElement(
@@ -1270,6 +1525,7 @@ function renderGallery(){
       name.textContent=
         it.file.name;
 
+
       const type=
         document.createElement(
           "div"
@@ -1280,6 +1536,7 @@ function renderGallery(){
       type.textContent=
         it.kind;
 
+
       const buttons=
         document.createElement(
           "div"
@@ -1288,6 +1545,7 @@ function renderGallery(){
       buttons.className=
         "cardBtns";
 
+
       const use=
         document.createElement(
           "button"
@@ -1295,6 +1553,7 @@ function renderGallery(){
 
       use.textContent=
         "Preview";
+
 
       use.onclick=
         function(e){
@@ -1305,44 +1564,56 @@ function renderGallery(){
 
         };
 
+
       const save=
         document.createElement(
           "button"
         );
 
+
       save.textContent=
         it.busy
           ? "Working…"
-          : it.result
-            ? "Save"
-            : "Export";
+          : "Export";
+
 
       save.disabled=
         it.busy;
+
 
       save.onclick=
         async function(e){
 
           e.stopPropagation();
 
-          if(it.result){
-
-            await saveBlob(
-              it.result.blob,
-              it.result.name
-            );
-
-          }else{
-
-            await exportOne(index);
-
-          }
+          await exportOne(
+            index
+          );
 
         };
 
-      buttons.appendChild(use);
 
-      buttons.appendChild(save);
+      buttons.appendChild(
+        use
+      );
+
+      buttons.appendChild(
+        save
+      );
+
+
+      body.appendChild(
+        name
+      );
+
+      body.appendChild(
+        type
+      );
+
+      body.appendChild(
+        buttons
+      );
+
 
       if(it.error){
 
@@ -1363,21 +1634,21 @@ function renderGallery(){
         error.textContent=
           it.error;
 
+
         body.appendChild(
           error
         );
 
       }
 
-      body.appendChild(name);
 
-      body.appendChild(type);
+      card.appendChild(
+        thumb
+      );
 
-      body.appendChild(buttons);
-
-      card.appendChild(thumb);
-
-      card.appendChild(body);
+      card.appendChild(
+        body
+      );
 
 
       const remove=
@@ -1385,15 +1656,20 @@ function renderGallery(){
           "button"
         );
 
+
       remove.className=
         "remove";
 
-      remove.textContent="×";
+
+      remove.textContent=
+        "×";
+
 
       remove.setAttribute(
         "aria-label",
         "Remove"
       );
+
 
       remove.onclick=
         function(e){
@@ -1404,7 +1680,11 @@ function renderGallery(){
 
         };
 
-      card.appendChild(remove);
+
+      card.appendChild(
+        remove
+      );
+
 
       card.onclick=
         function(){
@@ -1413,7 +1693,10 @@ function renderGallery(){
 
         };
 
-      gallery.appendChild(card);
+
+      gallery.appendChild(
+        card
+      );
 
     }
   );
@@ -1430,7 +1713,10 @@ function removeItem(index){
   const it=
     items[index];
 
-  if(!it)return;
+
+  if(!it)
+    return;
+
 
   try{
 
@@ -1440,35 +1726,48 @@ function removeItem(index){
 
   }catch(e){}
 
+
   items.splice(
     index,
     1
   );
 
-  if(selected===index){
+
+  if(
+    selected===index
+  ){
 
     selected=-1;
 
+
     video.pause();
+
 
     video.removeAttribute(
       "src"
     );
 
+
     video.load();
+
 
     muteBtn.classList.remove(
       "show"
     );
 
+
     playBtn.classList.remove(
       "show"
     );
 
+
     empty.style.display=
       "flex";
 
-    ctx.fillStyle="#000";
+
+    ctx.fillStyle=
+      "#000";
+
 
     ctx.fillRect(
       0,
@@ -1477,11 +1776,15 @@ function removeItem(index){
       canvas.height
     );
 
-  }else if(selected>index){
+
+  }else if(
+    selected>index
+  ){
 
     selected--;
 
   }
+
 
   renderGallery();
 
@@ -1512,32 +1815,43 @@ clearBtn.addEventListener(
       }
     );
 
+
     items=[];
 
     selected=-1;
 
+
     video.pause();
+
 
     video.removeAttribute(
       "src"
     );
 
+
     video.load();
+
 
     gallery.innerHTML="";
 
+
     empty.style.display=
       "flex";
+
 
     muteBtn.classList.remove(
       "show"
     );
 
+
     playBtn.classList.remove(
       "show"
     );
 
-    ctx.fillStyle="#000";
+
+    ctx.fillStyle=
+      "#000";
+
 
     ctx.fillRect(
       0,
@@ -1546,8 +1860,10 @@ clearBtn.addEventListener(
       canvas.height
     );
 
+
     progressWrap.style.display=
       "none";
+
 
     updateInfo();
 
@@ -1567,12 +1883,14 @@ function loadImage(src){
       const im=
         new Image();
 
+
       im.onload=
         function(){
 
           resolve(im);
 
         };
+
 
       im.onerror=
         function(){
@@ -1584,6 +1902,7 @@ function loadImage(src){
           );
 
         };
+
 
       im.src=src;
 
@@ -1602,10 +1921,13 @@ async function selectItem(i){
   const it=
     items[i];
 
+
   if(!it)
     return;
 
+
   selected=i;
+
 
   showStatus(
     "Loading "+
@@ -1617,33 +1939,38 @@ async function selectItem(i){
     "…"
   );
 
+
   video.pause();
 
-  /*
-   IMPORTANT FIX:
-
-   We DO NOT revoke it.url here.
-
-   it.url belongs to the actual file.
-   Revoking it while switching previews
-   makes the file unusable later.
-  */
 
   try{
 
-    if(it.kind==="video"){
+    if(
+      it.kind==="video"
+    ){
+
+      /*
+       Use the original file URL.
+
+       It remains valid for the lifetime
+       of the gallery item.
+      */
 
       video.src=
         it.url;
 
+
       video.muted=
         true;
+
 
       video.playsInline=
         true;
 
+
       video.preload=
-        "auto";
+        "metadata";
+
 
       video.playbackRate=
         SPEED;
@@ -1652,7 +1979,8 @@ async function selectItem(i){
       await new Promise(
         function(resolve,reject){
 
-          let finished=false;
+          let done=false;
+
 
           function cleanup(){
 
@@ -1673,11 +2001,14 @@ async function selectItem(i){
 
           }
 
+
           function success(){
 
-            if(finished)return;
+            if(done)
+              return;
 
-            finished=true;
+
+            done=true;
 
             cleanup();
 
@@ -1685,13 +2016,17 @@ async function selectItem(i){
 
           }
 
+
           function failure(){
 
-            if(finished)return;
+            if(done)
+              return;
 
-            finished=true;
+
+            done=true;
 
             cleanup();
+
 
             reject(
               new Error(
@@ -1701,40 +2036,48 @@ async function selectItem(i){
 
           }
 
+
           video.addEventListener(
             "loadedmetadata",
             success
           );
+
 
           video.addEventListener(
             "canplay",
             success
           );
 
+
           video.addEventListener(
             "error",
             failure
           );
 
+
           video.load();
+
 
           setTimeout(
             function(){
 
-              if(finished)return;
+              if(done)
+                return;
 
-              finished=true;
+
+              done=true;
 
               cleanup();
 
+
               reject(
                 new Error(
-                  "Video loading timed out. Try opening index.html in Safari."
+                  "Video loading timed out. The video may be too large for the available browser memory."
                 )
               );
 
             },
-            15000
+            20000
           );
 
         }
@@ -1753,23 +2096,35 @@ async function selectItem(i){
       }
 
 
+      const maxDimension=
+        isIOS()
+          ? MOBILE_VIDEO_MAX
+          : DESKTOP_VIDEO_MAX;
+
+
       fitCanvas(
         video.videoWidth,
-        video.videoHeight
+        video.videoHeight,
+        maxDimension
       );
+
 
       empty.style.display=
         "none";
 
+
       drawVideoPreview();
+
 
       muteBtn.classList.add(
         "show"
       );
 
+
       playBtn.classList.add(
         "show"
       );
+
 
       hideStatus();
 
@@ -1778,15 +2133,18 @@ async function selectItem(i){
 
         await video.play();
 
+
         playBtn.classList.remove(
           "show"
         );
 
       }catch(e){}
 
+
     }else{
 
       let im;
+
 
       try{
 
@@ -1798,23 +2156,19 @@ async function selectItem(i){
       }catch(e){
 
         /*
-         iOS fallback:
-         read the original File as
-         a Data URL.
+         Fallback for browsers that don't
+         decode the blob URL directly.
         */
 
-        if(!it.dataURL){
+        const data=
+          await fileDataURL(
+            it.file
+          );
 
-          it.dataURL=
-            await fileDataURL(
-              it.file
-            );
-
-        }
 
         im=
           await loadImage(
-            it.dataURL
+            data
           );
 
       }
@@ -1834,8 +2188,10 @@ async function selectItem(i){
 
       fitCanvas(
         im.naturalWidth,
-        im.naturalHeight
+        im.naturalHeight,
+        DESKTOP_VIDEO_MAX
       );
+
 
       paint(
         ctx,
@@ -1848,16 +2204,28 @@ async function selectItem(i){
         im
       );
 
+
+      /*
+       Release the image element as soon
+       as drawing is complete.
+      */
+
+      im.src="";
+
+
       empty.style.display=
         "none";
+
 
       muteBtn.classList.remove(
         "show"
       );
 
+
       playBtn.classList.remove(
         "show"
       );
+
 
       hideStatus();
 
@@ -1867,20 +2235,26 @@ async function selectItem(i){
 
     hideStatus();
 
+
     it.error=
       e.message ||
       "Could not load this media.";
 
+
     info.textContent=
       it.error;
 
+
     renderGallery();
+
 
     empty.style.display=
       "flex";
 
+
     ctx.fillStyle=
       "#080808";
+
 
     ctx.fillRect(
       0,
@@ -1911,6 +2285,7 @@ function drawVideoPreview(){
 
   }
 
+
   paint(
     ctx,
     canvas.width,
@@ -1931,6 +2306,7 @@ function previewLoop(){
     previewLoop
   );
 
+
   if(
     selected<0 ||
     !items[selected] ||
@@ -1943,6 +2319,7 @@ function previewLoop(){
 
   }
 
+
   if(
     video.currentTime-
     lastPreviewTime >=
@@ -1952,11 +2329,13 @@ function previewLoop(){
     lastPreviewTime=
       video.currentTime;
 
+
     drawVideoPreview();
 
   }
 
 }
+
 
 previewLoop();
 
@@ -2003,10 +2382,12 @@ muteBtn.onclick=
     video.muted=
       !video.muted;
 
+
     icoOn.style.display=
       video.muted
         ? "none"
         : "block";
+
 
     icoOff.style.display=
       video.muted
@@ -2073,6 +2454,7 @@ async function imageBlob(it){
 
   let im;
 
+
   try{
 
     im=
@@ -2082,24 +2464,23 @@ async function imageBlob(it){
 
   }catch(e){
 
-    if(!it.dataURL){
+    const data=
+      await fileDataURL(
+        it.file
+      );
 
-      it.dataURL=
-        await fileDataURL(
-          it.file
-        );
-
-    }
 
     im=
       await loadImage(
-        it.dataURL
+        data
       );
 
   }
 
 
-  const max=1600;
+  const max=
+    DESKTOP_VIDEO_MAX;
+
 
   const scale=
     Math.min(
@@ -2108,6 +2489,7 @@ async function imageBlob(it){
       max/im.naturalHeight
     );
 
+
   const w=
     Math.max(
       1,
@@ -2115,6 +2497,7 @@ async function imageBlob(it){
         im.naturalWidth*scale
       )
     );
+
 
   const h=
     Math.max(
@@ -2130,18 +2513,24 @@ async function imageBlob(it){
       "canvas"
     );
 
+
   c.width=w;
 
   c.height=h;
 
 
-  paint(
+  const localCtx=
     c.getContext(
       "2d",
       {
-        willReadFrequently:true
+        willReadFrequently:true,
+        alpha:false
       }
-    ),
+    );
+
+
+  paint(
+    localCtx,
     w,
     h,
     getVig(w,h),
@@ -2149,11 +2538,27 @@ async function imageBlob(it){
   );
 
 
+  /*
+   Release image memory immediately.
+  */
+
+  im.src="";
+
+
   return new Promise(
     function(resolve,reject){
 
       c.toBlob(
         function(blob){
+
+          /*
+           Release canvas pixel memory.
+          */
+
+          c.width=1;
+
+          c.height=1;
+
 
           if(blob){
 
@@ -2192,6 +2597,7 @@ async function videoBlob(
   const mime=
     pickVideoMime();
 
+
   if(!mime){
 
     throw new Error(
@@ -2199,6 +2605,7 @@ async function videoBlob(
     );
 
   }
+
 
   if(!canvas.captureStream){
 
@@ -2214,17 +2621,22 @@ async function videoBlob(
       "video"
     );
 
+
   v.src=
     it.url;
+
 
   v.playsInline=
     true;
 
+
   v.preload=
-    "auto";
+    "metadata";
+
 
   v.muted=
     false;
+
 
   v.playbackRate=
     SPEED;
@@ -2240,6 +2652,7 @@ async function videoBlob(
 
         };
 
+
       v.onerror=
         function(){
 
@@ -2251,13 +2664,19 @@ async function videoBlob(
 
         };
 
+
+      v.load();
+
     }
   );
 
 
-  const vw=v.videoWidth;
+  const vw=
+    v.videoWidth;
 
-  const vh=v.videoHeight;
+
+  const vh=
+    v.videoHeight;
 
 
   if(!vw||!vh){
@@ -2269,22 +2688,32 @@ async function videoBlob(
   }
 
 
+  /*
+   Use smaller working dimensions on iPhone.
+
+   This is one of the biggest RAM improvements.
+  */
+
   const cap=
     isIOS()
-      ? 960
-      : 1280;
+      ? MOBILE_VIDEO_MAX
+      : DESKTOP_VIDEO_MAX;
+
 
   const scale=
     Math.min(
       1,
-      cap/vw
+      cap/vw,
+      cap/vh
     );
+
 
   const w=
     Math.max(
       2,
       Math.round(vw*scale)
     );
+
 
   const h=
     Math.max(
@@ -2297,6 +2726,7 @@ async function videoBlob(
     document.createElement(
       "canvas"
     );
+
 
   c.width=w;
 
@@ -2316,6 +2746,7 @@ async function videoBlob(
   const vig=
     getVig(w,h);
 
+
   const stream=
     c.captureStream(
       EXPORT_FPS
@@ -2326,8 +2757,11 @@ async function videoBlob(
 
 
   /*
-   Audio capture is attempted on
-   browsers that support it.
+   Audio capture is attempted where
+   the browser allows it.
+
+   iOS often does not expose the source
+   audio track to a canvas recorder.
   */
 
   if(
@@ -2339,6 +2773,7 @@ async function videoBlob(
 
       const vs=
         v.captureStream();
+
 
       vs.getAudioTracks()
         .forEach(
@@ -2360,6 +2795,7 @@ async function videoBlob(
 
   let rec;
 
+
   try{
 
     rec=
@@ -2369,13 +2805,8 @@ async function videoBlob(
           mimeType:mime,
           videoBitsPerSecond:
             isIOS()
-              ? 2500000
-              : Math.max(
-                  1500000,
-                  Math.round(
-                    w*h*.14
-                  )
-                )
+              ? 1800000
+              : 2500000
         }
       );
 
@@ -2429,9 +2860,13 @@ async function videoBlob(
           timer
         );
 
+
         try{
+
           v.pause();
+
         }catch(e){}
+
 
         stream
           .getTracks()
@@ -2439,11 +2874,33 @@ async function videoBlob(
             function(track){
 
               try{
+
                 track.stop();
+
               }catch(e){}
 
             }
           );
+
+
+        /*
+         Release video decoder.
+        */
+
+        v.removeAttribute(
+          "src"
+        );
+
+        v.load();
+
+
+        /*
+         Release canvas pixel memory.
+        */
+
+        c.width=1;
+
+        c.height=1;
 
       }
 
@@ -2453,12 +2910,17 @@ async function videoBlob(
         if(stopped)
           return;
 
+
         stopped=true;
+
 
         cleanup();
 
+
         try{
+
           rec.stop();
+
         }catch(e){}
 
       }
@@ -2468,6 +2930,7 @@ async function videoBlob(
         function(){
 
           cleanup();
+
 
           reject(
             new Error(
@@ -2483,6 +2946,7 @@ async function videoBlob(
 
           cleanup();
 
+
           reject(
             new Error(
               "Browser video recorder failed."
@@ -2497,9 +2961,10 @@ async function videoBlob(
 
           const type=
             (
-              rec.mimeType ||
+              rec.mimeType||
               mime
             ).split(";")[0];
+
 
           const blob=
             new Blob(
@@ -2510,7 +2975,9 @@ async function videoBlob(
             );
 
 
-          if(blob.size<4096){
+          if(
+            blob.size<4096
+          ){
 
             reject(
               new Error(
@@ -2521,9 +2988,14 @@ async function videoBlob(
           }else{
 
             resolve({
+
               blob:blob,
-              audio:audioAttached,
+
+              audio:
+                audioAttached,
+
               mime:type
+
             });
 
           }
@@ -2535,6 +3007,7 @@ async function videoBlob(
 
         if(stopped)
           return;
+
 
         paint(
           cctx,
@@ -2549,9 +3022,12 @@ async function videoBlob(
           v.currentTime||0;
 
 
-        if(cur!==last){
+        if(
+          cur!==last
+        ){
 
           last=cur;
+
 
           progress(
             Math.min(
@@ -2581,15 +3057,21 @@ async function videoBlob(
 
       try{
 
-        rec.start(250);
+        rec.start(
+          250
+        );
 
       }catch(e){
+
+        cleanup();
+
 
         reject(
           new Error(
             "Could not start video recorder."
           )
         );
+
 
         return;
 
@@ -2601,7 +3083,7 @@ async function videoBlob(
           frame,
           Math.max(
             1000/EXPORT_FPS,
-            70
+            80
           )
         );
 
@@ -2621,9 +3103,10 @@ async function videoBlob(
 
             cleanup();
 
+
             reject(
               new Error(
-                "Tap the preview to allow video playback, then export again."
+                "Video playback could not start."
               )
             );
 
@@ -2631,16 +3114,25 @@ async function videoBlob(
         );
 
 
+      /*
+       Safety timeout.
+
+       Prevents a broken video from processing forever.
+      */
+
       setTimeout(
         function(){
 
-          if(!stopped)
+          if(!stopped){
+
             finish();
+
+          }
 
         },
         Math.max(
-          15000,
-          (duration/SPEED+8)*1000
+          20000,
+          (duration/SPEED+10)*1000
         )
       );
 
@@ -2659,10 +3151,15 @@ async function processItem(
   progress
 ){
 
-  if(it.kind==="image"){
+  if(
+    it.kind==="image"
+  ){
 
     const blob=
-      await imageBlob(it);
+      await imageBlob(
+        it
+      );
+
 
     return {
 
@@ -2674,7 +3171,8 @@ async function processItem(
         )+
         "-noir.jpg",
 
-      mime:blob.type
+      mime:
+        blob.type
 
     };
 
@@ -2711,6 +3209,126 @@ async function processItem(
 
 
 /* =========================================================
+   SAVE FILE
+   ========================================================= */
+
+async function saveBlob(
+  blob,
+  name
+){
+
+  const file=
+    new File(
+      [blob],
+      name,
+      {
+        type:
+          blob.type||
+          "application/octet-stream"
+      }
+    );
+
+
+  /*
+   iOS Share Sheet.
+
+   This is preferable to keeping
+   the file in memory longer than needed.
+  */
+
+  if(
+    isIOS() &&
+    navigator.share &&
+    navigator.canShare &&
+    navigator.canShare({
+      files:[file]
+    })
+  ){
+
+    try{
+
+      await navigator.share({
+        files:[file],
+        title:
+          "NOIR — "+
+          name
+      });
+
+
+      return true;
+
+    }catch(e){
+
+      /*
+       User cancellation is not treated
+       as a processing failure.
+      */
+
+      if(
+        e &&
+        e.name==="AbortError"
+      ){
+
+        return false;
+
+      }
+
+    }
+
+  }
+
+
+  /*
+   Desktop / browsers without Share API.
+  */
+
+  const url=
+    URL.createObjectURL(
+      blob
+    );
+
+
+  const a=
+    document.createElement(
+      "a"
+    );
+
+
+  a.href=url;
+
+  a.download=name;
+
+  a.rel="noopener";
+
+
+  document.body.appendChild(
+    a
+  );
+
+
+  a.click();
+
+
+  setTimeout(
+    function(){
+
+      a.remove();
+
+      URL.revokeObjectURL(
+        url
+      );
+
+    },
+    1500
+  );
+
+
+  return true;
+
+}
+
+
+/* =========================================================
    EXPORT ONE
    ========================================================= */
 
@@ -2718,6 +3336,7 @@ async function exportOne(i){
 
   const it=
     items[i];
+
 
   if(
     !it ||
@@ -2730,6 +3349,7 @@ async function exportOne(i){
 
 
   it.busy=true;
+
 
   renderGallery();
 
@@ -2762,14 +3382,21 @@ async function exportOne(i){
       );
 
 
-    it.result=r;
+    /*
+     IMPORTANT MEMORY FIX:
+
+     Save the result immediately.
+
+     Do NOT store the processed Blob
+     permanently inside the gallery item.
+    */
 
     it.error=null;
 
 
     setProgress(
-      1,
-      1,
+      100,
+      100,
       "Ready: "+
       it.file.name
     );
@@ -2783,20 +3410,47 @@ async function exportOne(i){
       r.name
     );
 
+
+    /*
+     Release the Blob reference as soon
+     as the save/share operation has started.
+    */
+
+    r.blob=null;
+
+
+    /*
+     Encourage garbage collection by
+     clearing temporary references.
+    */
+
+    if(
+      window.gc &&
+      typeof window.gc==="function"
+    ){
+
+      try{
+        window.gc();
+      }catch(e){}
+
+    }
+
   }catch(e){
 
     it.error=
-      e.message ||
+      e.message||
       "Export failed.";
 
+
     setProgress(
-      1,
-      1,
+      100,
+      100,
       "Failed: "+
       it.file.name+
       " — "+
       it.error
     );
+
 
     renderGallery();
 
@@ -2812,399 +3466,31 @@ async function exportOne(i){
 
 
 /* =========================================================
-   SAVE FILE
-   ========================================================= */
-
-async function saveBlob(
-  blob,
-  name
-){
-
-  const file=
-    new File(
-      [blob],
-      name,
-      {
-        type:
-          blob.type ||
-          "application/octet-stream"
-      }
-    );
-
-
-  /*
-   iPhone/iPad:
-   use native Share Sheet when available.
-  */
-
-  if(
-    isIOS() &&
-    navigator.share &&
-    navigator.canShare &&
-    navigator.canShare({
-      files:[file]
-    })
-  ){
-
-    try{
-
-      await navigator.share({
-        files:[file],
-        title:
-          "NOIR — "+
-          name
-      });
-
-      return;
-
-    }catch(e){}
-
-  }
-
-
-  const url=
-    URL.createObjectURL(
-      blob
-    );
-
-  const a=
-    document.createElement(
-      "a"
-    );
-
-  a.href=url;
-
-  a.download=name;
-
-  a.rel="noopener";
-
-  document.body.appendChild(a);
-
-  a.click();
-
-
-  setTimeout(
-    function(){
-
-      a.remove();
-
-      URL.revokeObjectURL(
-        url
-      );
-
-    },
-    1500
-  );
-
-}
-
-
-/* =========================================================
-   ZIP WRITER
-   ========================================================= */
-
-function u16(a,n){
-
-  a.push(
-    n&255,
-    (n>>>8)&255
-  );
-
-}
-
-
-function u32(a,n){
-
-  a.push(
-    n&255,
-    (n>>>8)&255,
-    (n>>>16)&255,
-    (n>>>24)&255
-  );
-
-}
-
-
-function crc32(buf){
-
-  let table=
-    crc32.t;
-
-
-  if(!table){
-
-    table=[];
-
-
-    for(
-      let n=0;
-      n<256;
-      n++
-    ){
-
-      let c=n;
-
-
-      for(
-        let k=0;
-        k<8;
-        k++
-      ){
-
-        c=
-          c&1
-            ? 0xedb88320^(c>>>1)
-            : c>>>1;
-
-      }
-
-      table[n]=
-        c>>>0;
-
-    }
-
-
-    crc32.t=table;
-
-  }
-
-
-  let c=
-    0xffffffff;
-
-
-  for(
-    let i=0;
-    i<buf.length;
-    i++
-  ){
-
-    c=
-      table[
-        (c^buf[i])&255
-      ] ^
-      (c>>>8);
-
-  }
-
-
-  return(
-    c^0xffffffff
-  )>>>0;
-
-}
-
-
-/* =========================================================
-   ASYNC ZIP
-   ========================================================= */
-
-async function makeZipAsync(
-  files
-){
-
-  const enc=
-    new TextEncoder();
-
-  const locals=[];
-
-  const centrals=[];
-
-  let offset=0;
-
-
-  for(
-    const f of files
-  ){
-
-    const data=
-      new Uint8Array(
-        await f.blob.arrayBuffer()
-      );
-
-    const name=
-      enc.encode(
-        f.name
-      );
-
-    const crc=
-      crc32(data);
-
-    const lh=[];
-
-
-    u32(
-      lh,
-      0x04034b50
-    );
-
-    u16(lh,20);
-
-    u16(lh,0);
-
-    u16(lh,0);
-
-    u16(lh,0);
-
-    u16(lh,0);
-
-    u32(lh,crc);
-
-    u32(lh,data.length);
-
-    u32(lh,data.length);
-
-    u16(
-      lh,
-      name.length
-    );
-
-    u16(lh,0);
-
-
-    const localBlob=
-      new Blob([
-        new Uint8Array(lh),
-        name,
-        data
-      ]);
-
-
-    locals.push(
-      localBlob
-    );
-
-
-    const ch=[];
-
-
-    u32(
-      ch,
-      0x02014b50
-    );
-
-    u16(ch,20);
-
-    u16(ch,20);
-
-    u16(ch,0);
-
-    u16(ch,0);
-
-    u16(ch,0);
-
-    u16(ch,0);
-
-    u32(ch,crc);
-
-    u32(ch,data.length);
-
-    u32(ch,data.length);
-
-    u16(
-      ch,
-      name.length
-    );
-
-    u16(ch,0);
-
-    u16(ch,0);
-
-    u16(ch,0);
-
-    u16(ch,0);
-
-    u32(ch,0);
-
-    u32(ch,offset);
-
-
-    centrals.push(
-      new Blob([
-        new Uint8Array(ch),
-        name
-      ])
-    );
-
-
-    offset+=
-      lh.length+
-      name.length+
-      data.length;
-
-  }
-
-
-  const centralSize=
-    centrals.reduce(
-      function(n,b){
-
-        return n+b.size;
-
-      },
-      0
-    );
-
-
-  const end=[];
-
-
-  u32(
-    end,
-    0x06054b50
-  );
-
-  u16(end,0);
-
-  u16(end,0);
-
-  u16(
-    end,
-    files.length
-  );
-
-  u16(
-    end,
-    files.length
-  );
-
-  u32(
-    end,
-    centralSize
-  );
-
-  u32(
-    end,
-    offset
-  );
-
-  u16(end,0);
-
-
-  return new Blob(
-    [
-      ...locals,
-      ...centrals,
-      new Uint8Array(end)
-    ],
-    {
-      type:"application/zip"
-    }
-  );
-
-}
-
-
-/* =========================================================
    SAVE ALL
    ========================================================= */
+
+/*
+  IMPORTANT:
+
+  We intentionally process ONE FILE AT A TIME.
+
+  The old design could keep multiple large
+  exported video Blobs in memory at once.
+
+  This design does not build a giant ZIP in RAM.
+*/
 
 saveAll.addEventListener(
   "click",
   async function(){
 
-    if(!items.length)
+    if(
+      !items.length
+    ){
+
       return;
+
+    }
 
 
     saveAll.disabled=true;
@@ -3216,8 +3502,6 @@ saveAll.addEventListener(
 
     let fail=0;
 
-    const results=[];
-
 
     for(
       let i=0;
@@ -3228,7 +3512,9 @@ saveAll.addEventListener(
       const it=
         items[i];
 
+
       it.busy=true;
+
 
       renderGallery();
 
@@ -3267,21 +3553,41 @@ saveAll.addEventListener(
           );
 
 
-        it.result=r;
+        /*
+         Immediately save this result.
+
+         It is NOT added to an array.
+
+         This is what prevents a collection
+         of 1-minute videos from filling RAM.
+        */
+
+        await saveBlob(
+          r.blob,
+          r.name
+        );
+
+
+        /*
+         Drop reference immediately.
+        */
+
+        r.blob=null;
+
 
         it.error=null;
 
-        results.push(r);
-
         ok++;
+
 
       }catch(e){
 
         it.error=
-          e.message ||
+          e.message||
           "Export failed.";
 
         fail++;
+
 
       }finally{
 
@@ -3291,42 +3597,23 @@ saveAll.addEventListener(
 
       }
 
-    }
 
+      /*
+       Give the browser a moment to release
+       decoder/canvas/blob memory between files.
 
-    try{
+       This is particularly useful on iOS Safari.
+      */
 
-      if(results.length===1){
+      await new Promise(
+        function(resolve){
 
-        await saveBlob(
-          results[0].blob,
-          results[0].name
-        );
-
-      }else if(results.length>1){
-
-        const zip=
-          await makeZipAsync(
-            results
+          setTimeout(
+            resolve,
+            100
           );
 
-        await saveBlob(
-          zip,
-          "noir-export-"+
-          new Date()
-            .toISOString()
-            .slice(0,10)+
-          ".zip"
-        );
-
-      }
-
-    }catch(e){
-
-      setProgress(
-        items.length,
-        items.length,
-        "Processing finished, but the browser blocked the final download. Use each item's Save button."
+        }
       );
 
     }
@@ -3343,12 +3630,6 @@ saveAll.addEventListener(
             fail+
             " failed"
           : ""
-      )+
-      " — "+
-      (
-        results.length>1
-          ? "ZIP download started"
-          : "download started"
       )
     );
 
@@ -3380,7 +3661,10 @@ window.addEventListener(
 
       fitCanvas(
         video.videoWidth,
-        video.videoHeight
+        video.videoHeight,
+        isIOS()
+          ? MOBILE_VIDEO_MAX
+          : DESKTOP_VIDEO_MAX
       );
 
     }
@@ -3397,9 +3681,14 @@ clearBtn.disabled=true;
 
 updateInfo();
 
-empty.style.display="flex";
 
-ctx.fillStyle="#000";
+empty.style.display=
+  "flex";
+
+
+ctx.fillStyle=
+  "#000";
+
 
 ctx.fillRect(
   0,
@@ -3418,6 +3707,7 @@ if(
     document.getElementById(
       "iosHint"
     );
+
 
   if(iosHint){
 
